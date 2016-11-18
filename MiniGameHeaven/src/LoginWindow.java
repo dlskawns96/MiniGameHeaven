@@ -93,6 +93,8 @@ public class LoginWindow extends JFrame {
 		signUpBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("Sign Up Button Clicked");
+				SignUpWindow suw = new SignUpWindow();
+				suw.run();
 			}
 		});
 	}
