@@ -6,6 +6,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
@@ -19,8 +22,7 @@ public class SignUpWindow extends JFrame {
 
 	/**
 	 * Launch the application.
-	 */
-	
+	 */	
 	public void run() {
 		try {
 			SignUpWindow frame = new SignUpWindow();
@@ -29,7 +31,6 @@ public class SignUpWindow extends JFrame {
 			e.printStackTrace();
 		}
 	}
-
 	/**
 	 * Create the frame.
 	 */
@@ -84,6 +85,12 @@ public class SignUpWindow extends JFrame {
 		JButton IDCheckBtn = new JButton("Check");
 		IDCheckBtn.setBounds(293, 66, 73, 27);
 		contentPane.add(IDCheckBtn);
+		IDCheckBtn.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0){
+				System.out.println("ID check button clicked");
+			}
+		});
+		
 		
 		JButton signUpBtn = new JButton("Sign Up");
 		signUpBtn.setBounds(164, 304, 105, 27);
