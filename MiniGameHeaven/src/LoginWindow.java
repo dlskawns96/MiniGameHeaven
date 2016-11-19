@@ -16,20 +16,17 @@ import java.net.UnknownHostException;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import java.io.*;
+import java.net.*;
 
 public class LoginWindow extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField IDField;
 	private JPasswordField passwordField;
-
-	static Socket socket;
 	
-	public static void socketConnect() throws UnknownHostException, IOException
-	{
-		socket = new Socket("127.0.0.1", 8888);
-		
-	}
+	private static Socket client;
+	
+	
 	
 	/**
 	 * Launch the application.
@@ -40,6 +37,10 @@ public class LoginWindow extends JFrame {
 				try {
 					LoginWindow frame = new LoginWindow();
 					frame.setVisible(true);
+					client = new Socket();
+					InetSocketAddress ipep = new InetSocketAddress("127.0.0.1", 9999);
+					client.connect(ipep);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -88,10 +89,38 @@ public class LoginWindow extends JFrame {
 
 				System.out.println("Sign In Button Clicked\nID = " + ID + " PassWord = " + password);
 				
+				try(OutputStream sender = client.getOutputStream();
+					InputStream receiver = client.getInputStream();){
+					
+					String message;
+					byte[] data = new byte[15];
+					
+					//send to server
+					message = "LoginCheck";
+					data = message.getBytes();
+					sender.write(data);
+					
+					//receive from server
+					receiver.read(data);
+					message = new String(data);
+					System.out.println(message);
+					
+					if(message.endsWith("ID"))
+					{
+						message = ID;
+						data = message.getBytes();
+						sender.write(data);
+					}
+					 																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																					
+				} catch(Throwable e) {
+					
+				}
+				/*
 				if(LoginChecker.loginCheck(ID, password))
 					System.out.println("login success");
 				else
 					System.out.println("login error");
+				*/
 			}
 		});
 		signInBtn.setBounds(274, 75, 105, 61);

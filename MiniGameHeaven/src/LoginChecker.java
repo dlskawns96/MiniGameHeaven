@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.io.*;
 
 public class LoginChecker{
 
@@ -70,10 +71,43 @@ public class LoginChecker{
 			System.out.println("SQLState: " + e.getSQLState());
 		}
 		return false;
-		
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		//Server Connect
+		ServerSocket server = new ServerSocket();
+		InetSocketAddress ipep = new InetSocketAddress(9999);
+		server.bind(ipep);
+
+		Socket client = server.accept();
+		System.out.println("Connected");
+		
+		OutputStream sender = client.getOutputStream();
+		InputStream receiver = client.getInputStream();
+		String message;
+		
+		byte[] data = new byte[15];
+		receiver.read(data,0,data.length);
+		message = new String(data);
+		
+		//To login
+		if(message.startsWith("LoginCheck"))
+		{
+			System.out.println("!!!!!!");
+			//클라이언트에게 ID를 보내라고 요청
+			message = "Give me ID";
+			data = message.getBytes();
+			sender.write(data, 0, data.length);
+			
+			//ID 받기
+			receiver.read(data,0,data.length);
+			message = new String(data);
+			System.out.println("ID received" + message);
+		}
+		else if(message.startsWith("IDCheck")) //To redundancy check
+		{
+			//클라이언트에게 ID를 보내라고 요청
+		}
 		
 	}
 	
