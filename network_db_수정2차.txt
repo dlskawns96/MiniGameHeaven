@@ -1,6 +1,6 @@
-create database network_minigameheaven;
-use network_minigameheaven;
-create table USER(user_id varchar(20), user_pw varchar(20) not null, name varchar(10) not null,rankColor varchar(10) default 'White',cloverNum int default 0,time_signup date, logined boolean default false,primary key(user_id),check(rankColor in 'White','Gold','Silver','Bronze','Red')));
+create database minigameheaven;
+use minigameheaven;
+create table user(user_id varchar(20), user_pw varchar(20) not null, name varchar(10) not null,rankColor varchar(10) default 'White',cloverNum int default 0,time_signup date, logined boolean default false,primary key(user_id),check(rankColor in ('White','Gold','Silver','Bronze','Red')));
 create table userlist(user_id varchar(20),user_pw varchar(20),login_state varchar(20),user_state varchar(10),time_banned int,totaluser int,primary key(user_id),foreign key(user_id)references user(user_id));
 create table game(game_id varchar(10)primary key,game_title varchar(50) not null,MAXplayer int not null,MAXcrowd int default 10,clovercost int not null,developer_id varchar(20) not null,constraint fk_id foreign key(developer_id) references user(user_id) on update cascade);
 create table ranking(game_id varchar(10),user_id varchar(20),rank varchar(5) not null,score int default 0,constraint fk_id foreign key(game_id) references game(game_id),constraint fk_id foreign key(user_id) references user(user_id),unique(game_id,user_id,rank));
