@@ -10,7 +10,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.awt.event.ActionEvent;
@@ -26,8 +25,6 @@ public class LoginWindow extends JFrame {
 	
 	private static Socket client;
 	
-	
-	
 	/**
 	 * Launch the application.
 	 */
@@ -37,9 +34,7 @@ public class LoginWindow extends JFrame {
 				try {
 					LoginWindow frame = new LoginWindow();
 					frame.setVisible(true);
-					client = new Socket();
-					InetSocketAddress ipep = new InetSocketAddress("127.0.0.1", 9999);
-					client.connect(ipep);
+					client = new Socket("127.0.0.1", 1112);
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -89,40 +84,50 @@ public class LoginWindow extends JFrame {
 
 				System.out.println("Sign In Button Clicked\nID = " + ID + " PassWord = " + password);
 				
-				try(OutputStream sender = client.getOutputStream();
-					InputStream receiver = client.getInputStream();){
+				try(DataOutputStream sender = new DataOutputStream(client.getOutputStream());
+					BufferedReader receiver = new BufferedReader(new InputStreamReader(client.getInputStream()));){
 					
 					String message;
-					byte[] data = new byte[15];
 					
 					//send to server
 					message = "LoginCheck";
-					data = message.getBytes();
-					sender.write(data);
+					sender.writeBytes(message + '\n');
 					
 					//receive from server
-					receiver.read(data);
-					message = new String(data);
+					message = receiver.readLine();
 					System.out.println(message);
 					
-					if(message.endsWith("ID"))
+					if(message.endsWith("ID")) //Send ID to server
 					{
 						message = ID;
-						data = message.getBytes();
-						sender.write(data);
+						sender.writeBytes(message + '\n');
+					}
+					
+					//서버의 비번 요청
+					message = receiver.readLine();
+					if(message.endsWith("password"))
+					{
+						message = password;
+						sender.writeBytes(message + "\n"); //서버에게 비번 전송
+					}
+					
+					//로그인 성공/실패 메시지 받기
+					message = receiver.readLine();
+					if(message.endsWith("success")) //로그인 성공
+					{
+						
+					}
+					else //로그인 실패
+					{
+						
 					}
 					 																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																					
 				} catch(Throwable e) {
 					
 				}
-				/*
-				if(LoginChecker.loginCheck(ID, password))
-					System.out.println("login success");
-				else
-					System.out.println("login error");
-				*/
 			}
 		});
+		
 		signInBtn.setBounds(274, 75, 105, 61);
 		contentPane.add(signInBtn);
 		

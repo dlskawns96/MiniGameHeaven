@@ -22,23 +22,18 @@ public class LoginChecker{
 		st.executeQuery("use minigameheaven");
 	}
 	
-	public static boolean loginCheck(String ID, String password)
+	public static boolean passwordCheck(String password)
 	{
 		System.out.println("Login Checking...");
-		try {
-		
-			//If ID correct
-			if(IDCheck(ID))
+		try {		
+			rs = st.executeQuery("select count(password_id) from user where password_id = \"" + password + "\"");
+			rs.next();
+			//If also password correct
+			if(rs.getString(1).equals("1"))
 			{
-				rs = st.executeQuery("select count(password_id) from user where password_id = \"" + password + "\"");
-				rs.next();
-				//If also password correct
-				if(rs.getString(1).equals("1"))
-				{
-					return true;
-					//login success
-				}
-			}
+				return true;
+				//login success
+			}		
 		} catch (SQLException sqex) {
 			System.out.println("SQLException: " + sqex.getMessage());
 			System.out.println("SQLState: " + sqex.getSQLState());
@@ -73,22 +68,22 @@ public class LoginChecker{
 		return false;
 	}
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, SQLException {
 		//Server Connect
-		ServerSocket server = new ServerSocket();
-		InetSocketAddress ipep = new InetSocketAddress(9999);
-		server.bind(ipep);
-
+		ServerSocket server = new ServerSocket(1112);
+		String message;
+		String receivedID;
+		String receivedPW;
+		
 		Socket client = server.accept();
 		System.out.println("Connected");
 		
-		OutputStream sender = client.getOutputStream();
-		InputStream receiver = client.getInputStream();
-		String message;
+		DataOutputStream sender = new DataOutputStream(client.getOutputStream());
+		BufferedReader receiver = new BufferedReader(new InputStreamReader(client.getInputStream()));
 		
-		byte[] data = new byte[15];
-		receiver.read(data,0,data.length);
-		message = new String(data);
+		
+		
+		message = receiver.readLine();
 		
 		//To login
 		if(message.startsWith("LoginCheck"))
@@ -96,18 +91,30 @@ public class LoginChecker{
 			System.out.println("!!!!!!");
 			//클라이언트에게 ID를 보내라고 요청
 			message = "Give me ID";
-			data = message.getBytes();
-			sender.write(data, 0, data.length);
+			sender.writeBytes(message + '\n');
 			
 			//ID 받기
-			receiver.read(data,0,data.length);
-			message = new String(data);
-			System.out.println("ID received" + message);
+			receivedID = receiver.readLine();
+			System.out.println("ID received" + receivedID);
+			
+			if(IDCheck(receivedID)) //ID가 맞으면
+			{
+				//password 요청
+				sender.writeBytes("Give me password\n");
+				receivedPW = receiver.readLine();
+				if(passwordCheck(receivedPW))//passwordCheck 실행
+					sender.writeBytes("Login Success\n"); //Login 성공				
+				else
+					sender.writeBytes("Login Failed"); //Login 실패
+			}
+			else
+				sender.writeBytes("Login Failed"); //Login 실패
 		}
 		else if(message.startsWith("IDCheck")) //To redundancy check
 		{
 			//클라이언트에게 ID를 보내라고 요청
 		}
+	
 		
 	}
 	
