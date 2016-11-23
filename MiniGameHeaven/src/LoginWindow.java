@@ -24,17 +24,16 @@ public class LoginWindow extends JFrame {
 	private JPasswordField passwordField;
 	
 	private static Socket client;
-	
-	/**
+	/*
 	 * Launch the application.
-	 */
+	*/
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					LoginWindow frame = new LoginWindow();
 					frame.setVisible(true);
-					client = new Socket("127.0.0.1", 1112);
+				
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -47,7 +46,7 @@ public class LoginWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public LoginWindow() {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -78,7 +77,15 @@ public class LoginWindow extends JFrame {
 		signInBtn.setFont(new Font("Gulim", Font.PLAIN, 15));
 		signInBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				try {
+					client = new Socket("127.0.0.1", 9996);
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				String ID = IDField.getText();
 				String password = passwordField.getText();
 
@@ -109,19 +116,28 @@ public class LoginWindow extends JFrame {
 					{
 						message = password;
 						sender.writeBytes(message + "\n"); //서버에게 비번 전송
+						System.out.println("Sent PW");
+					}
+					else
+					{
+						System.out.println("Login Failed");
+						client.close();
+						return;
 					}
 					
 					//로그인 성공/실패 메시지 받기
 					message = receiver.readLine();
-					if(message.endsWith("success")) //로그인 성공
+					if(message.endsWith("Success")) //로그인 성공
 					{
-						
+						System.out.println("Login Success");
 					}
 					else //로그인 실패
 					{
-						
+						System.out.println("Login Failed");
 					}
-					 																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																					
+					client.close();
+					sender.close();
+					receiver.close();
 				} catch(Throwable e) {
 					
 				}

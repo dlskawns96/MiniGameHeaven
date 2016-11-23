@@ -1,15 +1,19 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
+import javax.swing.*;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.*;
 
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 
 public class SignUpWindow extends JFrame {
@@ -20,6 +24,9 @@ public class SignUpWindow extends JFrame {
 	private JTextField PWAgainField;
 	private JTextField emailField;
 
+	private static Socket client;
+	private static boolean IDChecked = false;
+	private JTextField nameField;
 	/**
 	 * Launch the application.
 	 */	
@@ -35,7 +42,7 @@ public class SignUpWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public SignUpWindow() {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 450, 403);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -44,57 +51,163 @@ public class SignUpWindow extends JFrame {
 		
 		JLabel lblId = new JLabel("ID (Will be used as your nickname)");
 		lblId.setFont(new Font("±¼¸²", Font.BOLD, 15));
-		lblId.setBounds(72, 46, 310, 18);
+		lblId.setBounds(72, 78, 310, 18);
 		contentPane.add(lblId);
 		
 		JLabel lblPassword = new JLabel("Password");
 		lblPassword.setFont(new Font("±¼¸²", Font.BOLD, 15));
-		lblPassword.setBounds(72, 103, 310, 18);
+		lblPassword.setBounds(72, 135, 310, 18);
 		contentPane.add(lblPassword);
 		
 		JLabel lblRep = new JLabel("Password Again");
 		lblRep.setFont(new Font("±¼¸²", Font.BOLD, 15));
-		lblRep.setBounds(72, 159, 310, 18);
+		lblRep.setBounds(72, 191, 310, 18);
 		contentPane.add(lblRep);
 		
 		JLabel lblNewLabel = new JLabel("Email Adress");
 		lblNewLabel.setFont(new Font("±¼¸²", Font.BOLD, 15));
-		lblNewLabel.setBounds(72, 219, 310, 18);
+		lblNewLabel.setBounds(72, 251, 310, 18);
 		contentPane.add(lblNewLabel);
 		
 		IDField = new JTextField();
-		IDField.setBounds(72, 67, 209, 24);
+		IDField.setBounds(72, 99, 209, 24);
 		contentPane.add(IDField);
 		IDField.setColumns(10);
 		
-		PWField = new JTextField();
-		PWField.setBounds(72, 123, 209, 24);
+		PWField = new JPasswordField();
+		PWField.setBounds(72, 155, 209, 24);
 		contentPane.add(PWField);
 		PWField.setColumns(10);
 		
-		PWAgainField = new JTextField();
-		PWAgainField.setBounds(72, 189, 209, 24);
+		PWAgainField = new JPasswordField();
+		PWAgainField.setBounds(72, 221, 209, 24);
 		contentPane.add(PWAgainField);
 		PWAgainField.setColumns(10);
 		
 		emailField = new JTextField();
-		emailField.setBounds(72, 249, 209, 24);
+		emailField.setBounds(72, 281, 209, 24);
 		contentPane.add(emailField);
 		emailField.setColumns(10);
 		
+		
+		JLabel lblName = new JLabel("Name");
+		lblName.setFont(new Font("±¼¸²", Font.BOLD, 15));
+		lblName.setBounds(72, 30, 62, 18);
+		contentPane.add(lblName);
+		
+		nameField = new JTextField();
+		nameField.setBounds(72, 49, 116, 24);
+		contentPane.add(nameField);
+		nameField.setColumns(10);
+		
 		JButton IDCheckBtn = new JButton("Check");
-		IDCheckBtn.setBounds(293, 66, 73, 27);
+		IDCheckBtn.setBounds(293, 98, 73, 27);
 		contentPane.add(IDCheckBtn);
 		IDCheckBtn.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0){
+			public void actionPerformed(ActionEvent arg0){				
 				System.out.println("ID check button clicked");
+				
+				try {
+					client = new Socket("127.0.0.1", 9996);
+				} catch (UnknownHostException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				
+				try(DataOutputStream sender = new DataOutputStream(client.getOutputStream());
+				BufferedReader receiver = new BufferedReader(new InputStreamReader(client.getInputStream()));) {
+					sender.writeBytes("IDCheck\n");
+					if(receiver.readLine().endsWith("ID"))
+					{
+						sender.writeBytes(IDField.getText() + "\n");
+					}
+					else
+					{
+						client.close();
+						return;
+					}
+					if(receiver.readLine().startsWith("success"))
+					{
+						IDField.setEditable(false);
+						IDChecked = true;
+					}
+					else
+					{
+						client.close();
+						return;
+					}
+					client.close();
+					sender.close();
+					receiver.close();
+				} catch(Throwable e) {
+					
+				} 			
 			}
 		});
 		
 		
 		JButton signUpBtn = new JButton("Sign Up");
-		signUpBtn.setBounds(164, 304, 105, 27);
+		signUpBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("Sign up Button Clicked");
+				String ID = IDField.getText();
+				String PW = PWField.getText();
+				String PWre = PWAgainField.getText();
+				
+				if(!IDChecked)
+				{
+					JOptionPane.showMessageDialog(null, "Check Your ID First!!");
+					return;
+				}
+				
+				if(!(PW.equals(PWre)))
+				{
+					JOptionPane.showMessageDialog(null, "Your Password is different");
+					PWField.setText("");
+					PWAgainField.setText("");
+					return;
+				}
+				
+				String email = emailField.getText();
+				String name = nameField.getText();
+				try {
+					client = new Socket("127.0.0.1", 9996);
+				} catch (UnknownHostException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}			
+				
+				try(DataOutputStream sender = new DataOutputStream(client.getOutputStream());
+				BufferedReader receiver = new BufferedReader(new InputStreamReader(client.getInputStream()));) {
+					
+					sender.writeBytes("Sign Up\n");
+					
+					if(receiver.readLine().equals("OK"))
+					{
+						sender.writeBytes(ID + "\n");
+						sender.writeBytes(PW+ "\n");
+						sender.writeBytes(email+ "\n");
+						sender.writeBytes(name+ "\n");
+						if(receiver.readLine().equals("OK"))
+						{
+							JOptionPane.showMessageDialog(null, "Success to sign up!!");
+							setVisible(false);
+							dispose();							
+						}
+					}
+					else
+						return;
+					
+				} catch(Throwable e) {
+					
+				} 	
+				
+			}
+		});
+
+		signUpBtn.setBounds(165, 317, 105, 27);
 		contentPane.add(signUpBtn);
 	}
-
 }
