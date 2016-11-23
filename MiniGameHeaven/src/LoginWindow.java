@@ -1,14 +1,21 @@
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -33,8 +40,6 @@ public class LoginWindow extends JFrame {
 				try {
 					LoginWindow frame = new LoginWindow();
 					frame.setVisible(true);
-				
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -47,8 +52,13 @@ public class LoginWindow extends JFrame {
 	 */
 	public LoginWindow() {
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		getContentPane().setEnabled(false);
+		getContentPane().setForeground(Color.WHITE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
+		setResizable(false);
+		
+		contentPane = new MyPanel("LoginBG.jpg");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -65,10 +75,14 @@ public class LoginWindow extends JFrame {
 		
 		
 		JLabel lblId = new JLabel("ID");
+		lblId.setFont(new Font("µ¸¿ò", Font.BOLD, 14));
+		lblId.setForeground(Color.WHITE);
 		lblId.setBounds(53, 79, 62, 18);
 		contentPane.add(lblId);
 		
 		JLabel lblPassword = new JLabel("Password");
+		lblPassword.setFont(new Font("µ¸¿ò", Font.BOLD, 14));
+		lblPassword.setForeground(Color.WHITE);
 		lblPassword.setBounds(53, 115, 77, 18);
 		contentPane.add(lblPassword);
 		
@@ -171,5 +185,25 @@ public class LoginWindow extends JFrame {
 				suw.run();
 			}
 		});
+	}
+	
+	class MyPanel extends JPanel{
+		Image image;
+		MyPanel(String img){
+			image = Toolkit.getDefaultToolkit().createImage(img);
+			setOpaque(true);
+		}
+		public void paintComponent(Graphics g){
+			super.paintComponent(g);
+			if(image != null){
+				g.drawImage(image, 0, 0,this.getWidth(),this.getHeight(), this);
+			}
+			
+			Graphics2D g2d = (Graphics2D) g.create();
+			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.3f));
+			g2d.setColor(getBackground());
+			g2d.fill(getBounds());
+	        g2d.dispose();
+		}
 	}
 }
