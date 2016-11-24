@@ -20,7 +20,6 @@ public class SignUpWindow extends JFrame {
 	private JTextField IDField;
 	private JTextField PWField;
 	private JTextField PWAgainField;
-	private JTextField emailField;
 
 	private static Socket client;
 	private static boolean IDChecked = false;
@@ -49,57 +48,47 @@ public class SignUpWindow extends JFrame {
 		setIconImage(new ImageIcon("titleIcon.png").getImage());
 		JLabel lblId = new JLabel("ID (Will be used as your nickname)");
 		lblId.setFont(new Font("±¼¸²", Font.BOLD, 15));
-		lblId.setBounds(72, 78, 310, 18);
+		lblId.setBounds(72, 109, 310, 18);
 		contentPane.add(lblId);
 		
 		JLabel lblPassword = new JLabel("Password");
 		lblPassword.setFont(new Font("±¼¸²", Font.BOLD, 15));
-		lblPassword.setBounds(72, 135, 310, 18);
+		lblPassword.setBounds(72, 166, 310, 18);
 		contentPane.add(lblPassword);
 		
 		JLabel lblRep = new JLabel("Password Again");
 		lblRep.setFont(new Font("±¼¸²", Font.BOLD, 15));
-		lblRep.setBounds(72, 191, 310, 18);
+		lblRep.setBounds(72, 222, 310, 18);
 		contentPane.add(lblRep);
 		
-		JLabel lblNewLabel = new JLabel("Email Adress");
-		lblNewLabel.setFont(new Font("±¼¸²", Font.BOLD, 15));
-		lblNewLabel.setBounds(72, 251, 310, 18);
-		contentPane.add(lblNewLabel);
-		
 		IDField = new JTextField();
-		IDField.setBounds(72, 99, 209, 24);
+		IDField.setBounds(72, 130, 209, 24);
 		contentPane.add(IDField);
 		IDField.setColumns(10);
 		
 		PWField = new JPasswordField();
-		PWField.setBounds(72, 155, 209, 24);
+		PWField.setBounds(72, 186, 209, 24);
 		contentPane.add(PWField);
 		PWField.setColumns(10);
 		
 		PWAgainField = new JPasswordField();
-		PWAgainField.setBounds(72, 221, 209, 24);
+		PWAgainField.setBounds(72, 252, 209, 24);
 		contentPane.add(PWAgainField);
 		PWAgainField.setColumns(10);
-		
-		emailField = new JTextField();
-		emailField.setBounds(72, 281, 209, 24);
-		contentPane.add(emailField);
-		emailField.setColumns(10);
 		
 		
 		JLabel lblName = new JLabel("Name");
 		lblName.setFont(new Font("±¼¸²", Font.BOLD, 15));
-		lblName.setBounds(72, 30, 62, 18);
+		lblName.setBounds(72, 61, 62, 18);
 		contentPane.add(lblName);
 		
 		nameField = new JTextField();
-		nameField.setBounds(72, 49, 116, 24);
+		nameField.setBounds(72, 80, 116, 24);
 		contentPane.add(nameField);
 		nameField.setColumns(10);
 		
 		JButton IDCheckBtn = new JButton("Check");
-		IDCheckBtn.setBounds(293, 98, 73, 27);
+		IDCheckBtn.setBounds(293, 129, 73, 27);
 		contentPane.add(IDCheckBtn);
 		IDCheckBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0){				
@@ -167,7 +156,6 @@ public class SignUpWindow extends JFrame {
 					return;
 				}
 				
-				String email = emailField.getText();
 				String name = nameField.getText();
 				try {
 					client = new Socket("127.0.0.1", 9996);
@@ -186,7 +174,6 @@ public class SignUpWindow extends JFrame {
 					{
 						sender.writeBytes(ID + "\n");
 						sender.writeBytes(PW+ "\n");
-						sender.writeBytes(email+ "\n");
 						sender.writeBytes(name+ "\n");
 						if(receiver.readLine().equals("OK"))
 						{

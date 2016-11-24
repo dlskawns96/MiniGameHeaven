@@ -26,7 +26,7 @@ public class LoginChecker{
 	{
 		System.out.println("Login Checking...");
 		try {		
-			rs = st.executeQuery("select count(password_id) from user where password_id = \"" + password + "\"");
+			rs = st.executeQuery("select count(user_pw) from user where user_pw = \"" + password + "\"");
 			rs.next();
 			//If also password correct
 			if(rs.getString(1).equals("1"))
@@ -84,7 +84,7 @@ public class LoginChecker{
 			System.out.println("PW received");
 			if(passwordCheck(receivedPW))//passwordCheck 실행
 			{	
-				sender.writeBytes("Login Success\n"); //Login 성공					
+				sender.writeBytes("Login Success\n"); //Login 성공		
 				
 			}
 			else
@@ -98,7 +98,7 @@ public class LoginChecker{
 	
 	public static void main(String[] args) throws IOException, SQLException, ParseException {
 		//Server Connect
-		ServerSocket server = new ServerSocket(9996);
+		ServerSocket server = new ServerSocket(9997);
 		String message;
 
 		while(true)
@@ -135,10 +135,9 @@ public class LoginChecker{
 			else if(message.startsWith("Sign"))//To Sign Up
 			{
 				sender.writeBytes("OK\n");
-				String ID, PW, email, name;
+				String ID, PW, name;
 				ID = receiver.readLine();
 				PW = receiver.readLine();
-				email = receiver.readLine();
 				name = receiver.readLine();
 				DateFormat time = new SimpleDateFormat("dd/MM/yyyy");
 				String stime = time.format(new Date());

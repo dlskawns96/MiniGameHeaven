@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -93,7 +95,7 @@ public class LoginWindow extends JFrame {
 		signInBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					client = new Socket("127.0.0.1", 9996);
+					client = new Socket("127.0.0.1", 9997);
 				} catch (UnknownHostException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -144,10 +146,14 @@ public class LoginWindow extends JFrame {
 					message = receiver.readLine();
 					if(message.endsWith("Success")) //로그인 성공
 					{
+						JOptionPane.showMessageDialog(null, "Success to Login!!");
 						System.out.println("Login Success");
+						setVisible(false);
+						dispose();		
 					}
 					else //로그인 실패
 					{
+						JOptionPane.showMessageDialog(null, "Failed to Login!!");
 						System.out.println("Login Failed");
 					}
 					client.close();
