@@ -5,11 +5,17 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import java.awt.AlphaComposite;
 import java.awt.Button;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,7 +38,9 @@ public class WaitMain {
 	private JTextField chatInput;
 	private JTextArea chatRoom;
 	public static WaitMain waitMain;
+	Heart dispHeart;
 	JTextField textField = new JTextField(40);
+	int numOfHeart = 5;
 	BufferedReader in;
 	PrintWriter out;
 
@@ -88,7 +96,17 @@ public class WaitMain {
 	private void initialize() {
 
 		frame = new JFrame();
-		frame.getContentPane().setBackground(new Color(25, 25, 112));
+		ImageIcon bg = new ImageIcon("BG.jpg");
+		JPanel jp = new JPanel(){
+			public void paintComponent(Graphics g){
+				g.drawImage(bg.getImage(),0,0,null);
+				Dimension d = getSize();
+				g.drawImage(bg.getImage(), 0, 0, d.width,d.height,null);
+				setOpaque(false);
+				super.paintComponent(g);
+			}
+		};
+		frame.setContentPane(jp);
 		frame.getContentPane().setLayout(null);
 		frame.setResizable(false);
 		frame.setIconImage(new ImageIcon("titleIcon.png").getImage());
@@ -121,8 +139,6 @@ public class WaitMain {
 		gameRoomList.setBounds(442, 284, 340, 205);
 		frame.getContentPane().add(gameRoomList);
 
-		// ImageIcon btnImg_1 = new ImageIcon("rsrc/button_1.png");
-
 		JButton joinGame = new JButton();
 		joinGame.setText("\uAC8C\uC784 \uCC38\uC5EC\uD558\uAE30");
 		joinGame.setFocusable(false);
@@ -149,35 +165,18 @@ public class WaitMain {
 		scrollPane.setViewportView(chatRoom);
 		chatRoom.setEditable(false);
 
-		ImageIcon heartOk = new ImageIcon("heartOk.png");
-		Image hO = heartOk.getImage();
-		hO = hO.getScaledInstance(35, 35, java.awt.Image.SCALE_SMOOTH);
-		heartOk = new ImageIcon(hO);
-		ImageIcon heartNo = new ImageIcon("heartNo.png");
-		Image hX = heartNo.getImage();
-		hX = hX.getScaledInstance(35, 35, java.awt.Image.SCALE_SMOOTH);
-		heartNo = new ImageIcon(hX);
-		
-		JLabel[] heart = new JLabel[5];
+		dispHeart = new Heart(this.numOfHeart);
 		int i = 0;
-		for (JLabel j : heart) {
-			heart[i] = new JLabel();
-			heart[i].setIcon(heartOk);	
+		for (JLabel j : dispHeart.heart) {
+			this.dispHeart.heart[i].setBounds(500 + 50*i, 20, 35, 35);
+			frame.getContentPane().add(this.dispHeart.heart[i]);
 			i++;
 		}
+
 		JButton send = new JButton("\uC804 \uC1A1");
 		send.setBounds(354, 510, 76, 35);
 		frame.getContentPane().add(send);
 
-		i = 0;
-		for (JLabel j : heart) {
-			heart[i].setBounds(500 + 50*i, 20, 35, 35);
-			frame.getContentPane().add(heart[i]);
-			i++;
-		}
-		heart[0].setIcon(heartNo);
-		//frame.getContentPane().add(heart[4]);
-	
 		send.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

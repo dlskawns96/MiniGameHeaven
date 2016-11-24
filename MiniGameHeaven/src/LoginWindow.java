@@ -61,7 +61,7 @@ public class LoginWindow extends JFrame {
 		setResizable(false);
 		setIconImage(new ImageIcon("titleIcon.png").getImage());
 		
-		contentPane = new MyPanel("LoginBG.jpg");
+		contentPane = new MyPanel("LoginBG.jpg", 0.3f);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -194,23 +194,4 @@ public class LoginWindow extends JFrame {
 		});
 	}
 	
-	class MyPanel extends JPanel{
-		Image image;
-		MyPanel(String img){
-			image = Toolkit.getDefaultToolkit().createImage(img);
-			setOpaque(true);
-		}
-		public void paintComponent(Graphics g){
-			super.paintComponent(g);
-			if(image != null){
-				g.drawImage(image, 0, 0,this.getWidth(),this.getHeight(), this);
-			}
-			
-			Graphics2D g2d = (Graphics2D) g.create();
-			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.3f));
-			g2d.setColor(getBackground());
-			g2d.fill(getBounds());
-	        g2d.dispose();
-		}
-	}
 }

@@ -2,6 +2,8 @@ import java.awt.EventQueue;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -29,6 +31,7 @@ public class InGameOMOK extends WaitMain{
 	private JTextField chatInput;
 	private JTextArea chatRoom;
 	BufferedReader in;
+	public Heart dispHeart;
 	PrintWriter out;
 
 	/**
@@ -61,10 +64,21 @@ public class InGameOMOK extends WaitMain{
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.getContentPane().setBackground(new Color(25, 25, 112));
+		
+		ImageIcon bg = new ImageIcon("BG.jpg");
+		JPanel jp = new JPanel(){
+			public void paintComponent(Graphics g){
+				g.drawImage(bg.getImage(),0,0,null);
+				Dimension d = getSize();
+				g.drawImage(bg.getImage(), 0, 0, d.width,d.height,null);
+				setOpaque(false);
+				super.paintComponent(g);
+			}
+		};
+		frame.setContentPane(jp);
 		frame.getContentPane().setLayout(null);
 		frame.setResizable(false);
-		frame.setIconImage(new ImageIcon("rsrc/titleIcon.png").getImage());
+		frame.setIconImage(new ImageIcon("titleIcon.png").getImage());
 		chatInput = new JTextField();
 		chatInput.setBounds(478, 458, 216, 39);
 		frame.getContentPane().add(chatInput);
@@ -78,16 +92,26 @@ public class InGameOMOK extends WaitMain{
 				chatInput.setText("");
 			}
 		});
+		
+		frame.getContentPane().setBackground(Color.WHITE);
+		
 		JPanel cloverNum = new JPanel();
-		cloverNum.setBounds(592, 10, 190, 35);
-		frame.getContentPane().add(cloverNum);
-
-		JPanel userList = new JPanel();
-		userList.setBackground(Color.LIGHT_GRAY);
+		
+		cloverNum.setBounds(592, 5, 190, 35);
+		//frame.getContentPane().add(waitMain.dispHeart);
+		this.numOfHeart = waitMain.numOfHeart;
+		dispHeart = new Heart(this.numOfHeart);
+		int i = 0;
+		for (JLabel j : dispHeart.heart) {
+			dispHeart.heart[i].setBounds(510 + 50*i, 12, 35, 35);
+			frame.getContentPane().add(dispHeart.heart[i]);
+			i++;
+		}
+		JPanel userList = new MyPanel("list.png", 0.9f);
 		userList.setBounds(478, 55, 304, 156);
 		frame.getContentPane().add(userList);
 
-		ImageIcon btnImg_1 = new ImageIcon("rsrc/button_1.png");
+		ImageIcon btnImg_1 = new ImageIcon();
 		chatRoom = new JTextArea();
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(478, 221, 304, 227);
