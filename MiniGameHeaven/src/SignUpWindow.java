@@ -12,9 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
 
 public class SignUpWindow extends JFrame {
 
@@ -48,7 +46,7 @@ public class SignUpWindow extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+		setIconImage(new ImageIcon("titleIcon.png").getImage());
 		JLabel lblId = new JLabel("ID (Will be used as your nickname)");
 		lblId.setFont(new Font("±¼¸²", Font.BOLD, 15));
 		lblId.setBounds(72, 78, 310, 18);
