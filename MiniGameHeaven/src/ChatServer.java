@@ -28,7 +28,7 @@ public class ChatServer extends JFrame {
 		try {
 			ServerSocket serverSocket = new ServerSocket(5000);
 			MultiServerThread mst = null;// 한 사용자 담당할 채팅 객체
-			boolean isStop = false; // 깃발 값
+			boolean isStop = false; 
 			tf.setText("서버가 정상 실행중입니다.\n");
 			
 			while (!isStop) {
@@ -63,9 +63,9 @@ public class ChatServer extends JFrame {
 				
 				while (!isStop) {
 					message = (String) ois.readObject();// 클라이언트 입력 받기
-					String[] str = message.split("#");// 홍길동#방가방가
+					String[] str = message.split("#");
 					
-					if (str[1].equals("exit")) { // 홍길동#exit, 종료하겠다는 뜻
+					if (str[1].equals("exit")) { 
 						broadCasting(message);// 모든 사용자에게 내용 전달
 						isStop = true; // 종료
 					} else {

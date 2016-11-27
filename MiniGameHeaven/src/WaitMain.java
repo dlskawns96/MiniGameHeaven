@@ -209,14 +209,6 @@ public class WaitMain implements ActionListener, Runnable {
 		send.setBounds(354, 510, 76, 35);
 		send.addActionListener(this);
 		frame.getContentPane().add(send);
-		/*
-		 * send.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent arg0) {
-		 * chatRoom.append(chatInput.getText() + '\n'); chatInput.setText(""); }
-		 * });
-		 */
-
 		frame.setBounds(100, 100, 800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -229,42 +221,40 @@ public class WaitMain implements ActionListener, Runnable {
 		while (!isStop) {
 			try {
 				message = (String) ois.readObject();// 채팅내용
-				receiveMsg = message.split("#");// 홍길동#안녕
+				receiveMsg = message.split("#");
 			} catch (Exception e) {
 				e.printStackTrace();
 				isStop = true; // 반복문 종료로 설정
-			} // catch
+			} 
 			System.out.println(receiveMsg[0] + ":" + receiveMsg[1]);
-			if (receiveMsg[1].equals("exit")) { // 채팅 종료
-				if (receiveMsg[0].equals(ID)) { // 해당 사용자
+			if (receiveMsg[1].equals("exit")) { 
+				if (receiveMsg[0].equals(ID)) { 
 					System.exit(0);
-				} else { // 그 외의 사용자
+				} else { 
 					chatRoom.append(receiveMsg[0] + " 님이 종료했습니다\n");
-					// 커서를 현재 채팅 내용의 자리에 보여준다.
 					chatRoom.setCaretPosition(chatRoom.getDocument().getLength());
-				} // else : 그 외 사용자
-			} else { // exit 가 아닐 경우
+				} 
+			} else {
 				// 채팅 내용 보여주기
 				chatRoom.append(receiveMsg[0] + " : " + receiveMsg[1] + "\n");
-				// 커서를 현재 채팅 내용의 자리에 보여준다.
 				chatRoom.setCaretPosition(chatRoom.getDocument().getLength());
-			} // else
-		} // while
+			} 
+		} 
 
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) { // 이벤트 처리
-		Object obj = e.getSource(); // 에벤트 발생 위치 얻기
-		String msg = chatInput.getText(); // 채팅 내용 입력 받기
-		if (obj == chatInput || obj == send) { // 입력란에서 엔터를 친 경우
+	public void actionPerformed(ActionEvent e) { 
+		Object obj = e.getSource(); 
+		String msg = chatInput.getText(); 
+		if (obj == chatInput || obj == send) { 
 			try {
 				oos.writeObject(ID + "#" + msg);
 			} catch (Exception ee) {
 				ee.printStackTrace();
-			} // catch
-			chatInput.setText(""); // jtf 를 지운다.
-		} // else : 내용 O
+			} 
+			chatInput.setText(""); 
+		} 
 
 		/*
 		 * else if (obj == jbtn) { // 종료 버튼을 클릭한 경우 try { oos.writeObject(ID +
