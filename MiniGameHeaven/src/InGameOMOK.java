@@ -107,7 +107,9 @@ public class InGameOMOK extends WaitMain{
 			frame.getContentPane().add(dispHeart.heart[i]);
 			i++;
 		}
-		JPanel userList = new MyPanel("list.png", 0.9f);
+		JPanel userList = new JPanel();
+		userList.setOpaque(true);
+		userList.setBackground(new Color(0,0,0,90));
 		userList.setBounds(478, 55, 304, 156);
 		frame.getContentPane().add(userList);
 

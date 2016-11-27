@@ -9,9 +9,10 @@ import javax.swing.JPanel;
 public class MyPanel extends JPanel{
 		Image image;
 		float per;
+		
 		MyPanel(String img, float p){
 			image = Toolkit.getDefaultToolkit().createImage(img);
-			per = p;
+			this.per = p;
 			setOpaque(true);
 		}
 		public void paintComponent(Graphics g){
