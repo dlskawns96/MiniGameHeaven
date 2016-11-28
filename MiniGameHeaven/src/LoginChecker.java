@@ -15,7 +15,9 @@ public class LoginChecker{
 	
 	public static void sqlConnect() throws SQLException
 	{
-		con = DriverManager.getConnection("jdbc:mysql://localhost",	"root", "12345");
+		URL url = new URL("mnhServer.mooo.com");
+		con = DriverManager.getConnection("jdbc:mysql://" + url.getHost() + ":3306", "root", "12345");
+		
 		
 		st = con.createStatement();
 		rs = null;
