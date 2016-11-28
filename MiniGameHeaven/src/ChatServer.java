@@ -26,7 +26,7 @@ public class ChatServer extends JFrame {
 		
 		list = new ArrayList<MultiServerThread>();
 		try {
-			ServerSocket serverSocket = new ServerSocket(5000);
+			ServerSocket serverSocket = new ServerSocket(9999);
 			MultiServerThread mst = null;// 한 사용자 담당할 채팅 객체
 			boolean isStop = false; 
 			tf.setText("서버가 정상 실행중입니다.\n");

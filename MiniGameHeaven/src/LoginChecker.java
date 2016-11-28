@@ -11,23 +11,14 @@ public class LoginChecker {
 	static Connection con;
 	static Statement st;
 	static ResultSet rs;
-<<<<<<< HEAD
 
-	public static void sqlConnect() throws SQLException {
-		con = DriverManager.getConnection("jdbc:mysql://localhost", "root", "12345");
-=======
-	
-	
-	public static void sqlConnect() throws SQLException
+	public static void sqlConnect() throws SQLException, MalformedURLException
 	{
-		URL url = new URL("mnhServer.mooo.com");
-		con = DriverManager.getConnection("jdbc:mysql://" + url.getHost() + ":3306", "root", "12345");
-		
-		
->>>>>>> origin/master
+		URL url = new URL("http://mnhServer.mooo.com");
+		con = DriverManager.getConnection("jdbc:mysql://" + url.getHost() + ":3306/minigameheaven", "root", "12345");
+
 		st = con.createStatement();
 		rs = null;
-		st.executeQuery("use minigameheaven");
 	}
 
 	public static boolean passwordCheck(String password) {
@@ -48,7 +39,7 @@ public class LoginChecker {
 	}
 
 	// Check If ID is already exists, if so return true
-	public static boolean IDCheck(String ID) throws SQLException {
+	public static boolean IDCheck(String ID) throws SQLException, MalformedURLException {
 		// connect to MySql
 		sqlConnect();
 
@@ -99,7 +90,7 @@ public class LoginChecker {
 
 	public static void main(String[] args) throws IOException, SQLException, ParseException {
 		// Server Connect
-		ServerSocket server = new ServerSocket(9997);
+		ServerSocket server = new ServerSocket(8888);
 		String message;
 		System.out.println("로그인 서버 실행중...");
 		// ChatServer chatServer = new ChatServer();

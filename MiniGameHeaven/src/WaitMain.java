@@ -85,7 +85,7 @@ public class WaitMain implements ActionListener, Runnable {
 		frame.setVisible(true);
 		
 		try {
-			socket = new Socket(IP, 5000);
+			socket = new Socket(IP, 9999);
 			System.out.println("서버에 접속되었습니다.");
 			oos = new ObjectOutputStream(socket.getOutputStream());
 			ois = new ObjectInputStream(socket.getInputStream());
