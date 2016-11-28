@@ -55,7 +55,7 @@ public class WaitMain implements ActionListener, Runnable {
 	int numOfHeart = 5;
 	BufferedReader in;
 	PrintWriter out;
-	private static String ID = "임의의 사용자";
+	protected static String ID = "임의의 사용자";
 	private static String IP = "127.0.0.1";
 
 	/**
@@ -65,7 +65,7 @@ public class WaitMain implements ActionListener, Runnable {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					waitMain = new WaitMain(IP, ID);
+					waitMain = new WaitMain();
 					// waitMain.chatRun();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -78,16 +78,12 @@ public class WaitMain implements ActionListener, Runnable {
 	 * Create the application.
 	 */
 
+
 	WaitMain() {
-
-	}
-
-	WaitMain(String Ip, String Id) {
-		super();
+	
 		initialize();
 		frame.setVisible(true);
-		IP = Ip;
-		ID = Id;
+		
 		try {
 			socket = new Socket(IP, 5000);
 			System.out.println("서버에 접속되었습니다.");

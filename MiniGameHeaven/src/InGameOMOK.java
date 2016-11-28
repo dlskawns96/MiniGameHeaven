@@ -1,3 +1,5 @@
+
+
 import java.awt.EventQueue;
 
 import javax.swing.ImageIcon;
@@ -17,9 +19,11 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.net.Socket;
 
-import javax.swing.UIManager;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -30,6 +34,10 @@ public class InGameOMOK extends WaitMain{
 	private JFrame frame;
 	private JTextField chatInput;
 	private JTextArea chatRoom;
+	private Socket socket;
+	private ObjectInputStream ois;
+	private ObjectOutputStream oos;
+	private JButton send;
 	BufferedReader in;
 	public Heart dispHeart;
 	PrintWriter out;
@@ -121,7 +129,7 @@ public class InGameOMOK extends WaitMain{
 		chatRoom = new JTextArea();
 		scrollPane.setViewportView(chatRoom);
 		chatRoom.setEditable(false);
-		JButton send = new JButton("\uC804 \uC1A1");
+		send = new JButton("\uC804 \uC1A1");
 		send.setBounds(706, 458, 76, 39);
 		frame.getContentPane().add(send);
 		send.addActionListener(new ActionListener() {
@@ -164,4 +172,53 @@ public class InGameOMOK extends WaitMain{
 		frame.setBounds(100, 100, 800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+	@Override
+	public void run() {
+		String message = null;
+		String[] receiveMsg = null;
+		boolean isStop = false;
+		while (!isStop) {
+			try {
+				message = (String) ois.readObject();// 채팅내용
+				receiveMsg = message.split("$");
+			} catch (Exception e) {
+				e.printStackTrace();
+				isStop = true; // 반복문 종료로 설정
+			} 
+			System.out.println(receiveMsg[0] + ":" + receiveMsg[1]);
+			if (receiveMsg[1].equals("exit")) { 
+				if (receiveMsg[0].equals(ID)) { 
+					System.exit(0);
+				} else { 
+					chatRoom.append(receiveMsg[0] + " 님이 종료했습니다\n");
+					chatRoom.setCaretPosition(chatRoom.getDocument().getLength());
+				} 
+			} else {
+				// 채팅 내용 보여주기
+				chatRoom.append(receiveMsg[0] + " : " + receiveMsg[1] + "\n");
+				chatRoom.setCaretPosition(chatRoom.getDocument().getLength());
+			} 
+		} 
+
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) { 
+		Object obj = e.getSource(); 
+		String msg = chatInput.getText(); 
+		if (obj == chatInput || obj == send) { 
+			try {
+				oos.writeObject(waitMain.ID + "$" + msg);
+			} catch (Exception ee) {
+				ee.printStackTrace();
+			} 
+			chatInput.setText(""); 
+		} 
+
+		/*
+		 * else if (obj == jbtn) { // 종료 버튼을 클릭한 경우 try { oos.writeObject(ID +
+		 * "#exit"); } catch (Exception ee) { ee.printStackTrace(); } // catch
+		 * System.exit(0); }
+		 */ // else if : 종료 버튼
+	}// actionPerformed
 }
