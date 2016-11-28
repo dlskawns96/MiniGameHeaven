@@ -11,9 +11,20 @@ public class LoginChecker {
 	static Connection con;
 	static Statement st;
 	static ResultSet rs;
+<<<<<<< HEAD
 
 	public static void sqlConnect() throws SQLException {
 		con = DriverManager.getConnection("jdbc:mysql://localhost", "root", "12345");
+=======
+	
+	
+	public static void sqlConnect() throws SQLException
+	{
+		URL url = new URL("mnhServer.mooo.com");
+		con = DriverManager.getConnection("jdbc:mysql://" + url.getHost() + ":3306", "root", "12345");
+		
+		
+>>>>>>> origin/master
 		st = con.createStatement();
 		rs = null;
 		st.executeQuery("use minigameheaven");
