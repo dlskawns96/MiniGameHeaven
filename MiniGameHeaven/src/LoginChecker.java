@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.io.*;
 
-public class LoginChecker {
+public class LoginChecker implements Runnable {
 
 	static Connection con;
 	static Statement st;
@@ -89,55 +89,115 @@ public class LoginChecker {
 	}
 
 	public static void main(String[] args) throws IOException, SQLException, ParseException {
+//		// Server Connect
+//		ServerSocket server = new ServerSocket(9996);
+//		String message;
+//		System.out.println("로그인 서버 실행중...");
+//		// ChatServer chatServer = new ChatServer();
+//		while (true) {
+//			Socket client = server.accept();
+//			System.out.println("Connected");
+//
+//			DataOutputStream sender = new DataOutputStream(client.getOutputStream());
+//			BufferedReader receiver = new BufferedReader(new InputStreamReader(client.getInputStream()));
+//
+//			message = receiver.readLine();
+//
+//			// To login
+//			if (message.startsWith("LoginCheck")) {
+//				loginCheck(sender, receiver);
+//			} else if (message.startsWith("IDCheck")) {
+//				System.out.println("ID Checking...");
+//				sender.writeBytes("Give Me ID\n");
+//				message = receiver.readLine();
+//
+//				if (!IDCheck(message)) {
+//					System.out.println("Success");
+//					sender.writeBytes("success\n");
+//				} else
+//					sender.writeBytes("failed\n");
+//			} else if (message.startsWith("Sign"))// To Sign Up
+//				{
+//				sender.writeBytes("OK\n");
+//				String ID, PW, name;
+//				ID = receiver.readLine();
+//				PW = receiver.readLine();
+//				name = receiver.readLine();
+//				DateFormat time = new SimpleDateFormat("dd/MM/yyyy");
+//				String stime = time.format(new Date());
+//				Date date = time.parse(stime);
+//				java.sql.Date cal = new java.sql.Date(date.getTime());
+//
+//				String insert = "insert into user(user_id,user_pw,name,time_signup) values(?,?,?,?)";
+//				PreparedStatement ps = con.prepareStatement(insert);
+//				ps.setString(1, ID);
+//				ps.setString(2, PW);
+//				ps.setString(3, name);
+//				ps.setDate(4, cal);
+//
+//				ps.executeUpdate();
+//				sender.writeBytes("OK\n");
+//			}
+//		}
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+		try{
 		// Server Connect
-		ServerSocket server = new ServerSocket(8888);
-		String message;
-		System.out.println("로그인 서버 실행중...");
-		// ChatServer chatServer = new ChatServer();
-		while (true) {
-			Socket client = server.accept();
-			System.out.println("Connected");
+				ServerSocket server = new ServerSocket(9996);
+				String message;
+				System.out.println("로그인 서버 실행중...");
+				// ChatServer chatServer = new ChatServer();
+				while (true) {
+					Socket client = server.accept();
+					System.out.println("Connected");
 
-			DataOutputStream sender = new DataOutputStream(client.getOutputStream());
-			BufferedReader receiver = new BufferedReader(new InputStreamReader(client.getInputStream()));
+					DataOutputStream sender = new DataOutputStream(client.getOutputStream());
+					BufferedReader receiver = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-			message = receiver.readLine();
+					message = receiver.readLine();
 
-			// To login
-			if (message.startsWith("LoginCheck")) {
-				loginCheck(sender, receiver);
-			} else if (message.startsWith("IDCheck")) {
-				System.out.println("ID Checking...");
-				sender.writeBytes("Give Me ID\n");
-				message = receiver.readLine();
+					// To login
+					if (message.startsWith("LoginCheck")) {
+						loginCheck(sender, receiver);
+					} else if (message.startsWith("IDCheck")) {
+						System.out.println("ID Checking...");
+						sender.writeBytes("Give Me ID\n");
+						message = receiver.readLine();
 
-				if (!IDCheck(message)) {
-					System.out.println("Success");
-					sender.writeBytes("success\n");
-				} else
-					sender.writeBytes("failed\n");
-			} else if (message.startsWith("Sign"))// To Sign Up
-				{
-				sender.writeBytes("OK\n");
-				String ID, PW, name;
-				ID = receiver.readLine();
-				PW = receiver.readLine();
-				name = receiver.readLine();
-				DateFormat time = new SimpleDateFormat("dd/MM/yyyy");
-				String stime = time.format(new Date());
-				Date date = time.parse(stime);
-				java.sql.Date cal = new java.sql.Date(date.getTime());
+						if (!IDCheck(message)) {
+							System.out.println("Success");
+							sender.writeBytes("success\n");
+						} else
+							sender.writeBytes("failed\n");
+					} else if (message.startsWith("Sign"))// To Sign Up
+						{
+						sender.writeBytes("OK\n");
+						String ID, PW, name;
+						ID = receiver.readLine();
+						PW = receiver.readLine();
+						name = receiver.readLine();
+						DateFormat time = new SimpleDateFormat("dd/MM/yyyy");
+						String stime = time.format(new Date());
+						Date date = time.parse(stime);
+						java.sql.Date cal = new java.sql.Date(date.getTime());
 
-				String insert = "insert into user(user_id,user_pw,name,time_signup) values(?,?,?,?)";
-				PreparedStatement ps = con.prepareStatement(insert);
-				ps.setString(1, ID);
-				ps.setString(2, PW);
-				ps.setString(3, name);
-				ps.setDate(4, cal);
+						String insert = "insert into user(user_id,user_pw,name,time_signup) values(?,?,?,?)";
+						PreparedStatement ps = con.prepareStatement(insert);
+						ps.setString(1, ID);
+						ps.setString(2, PW);
+						ps.setString(3, name);
+						ps.setDate(4, cal);
 
-				ps.executeUpdate();
-				sender.writeBytes("OK\n");
-			}
+						ps.executeUpdate();
+						sender.writeBytes("OK\n");
+					}
+				}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 
