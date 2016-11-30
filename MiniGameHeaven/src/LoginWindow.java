@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -54,47 +55,51 @@ public class LoginWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public LoginWindow() {
-		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		getContentPane().setEnabled(false);
 		getContentPane().setForeground(Color.WHITE);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 590);
 		setResizable(false);
 		setIconImage(new ImageIcon("titleIcon.png").getImage());
-
-		contentPane = new MyPanel("LoginBG.jpg", 0.3f);
+		setTitle("Mini Game Heaven");
+		contentPane = new JPanel();
+		contentPane.setBackground(Color.PINK);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		IDField = new JTextField();
-		IDField.setBounds(131, 76, 129, 24);
+		IDField.setBounds(138, 402, 129, 24);
 		contentPane.add(IDField);
 		IDField.setColumns(10);
 
 		passwordField = new JPasswordField();
-		passwordField.setBounds(131, 112, 129, 24);
+		passwordField.setBounds(138, 438, 129, 24);
 		contentPane.add(passwordField);
 
 		JLabel lblId = new JLabel("ID");
 		lblId.setFont(new Font("µ¸¿ò", Font.BOLD, 14));
-		lblId.setForeground(Color.WHITE);
-		lblId.setBounds(53, 79, 62, 18);
+		lblId.setBounds(60, 405, 62, 18);
+		lblId.setForeground(Color.white);
 		contentPane.add(lblId);
 
 		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setFont(new Font("µ¸¿ò", Font.BOLD, 14));
-		lblPassword.setForeground(Color.WHITE);
-		lblPassword.setBounds(53, 115, 77, 18);
+		lblPassword.setFont(new Font("µ¸¿ò", Font.BOLD, 12));
+		lblPassword.setForeground(Color.white);
+		lblPassword.setBounds(60, 441, 77, 18);
 		contentPane.add(lblPassword);
 
 		// Sign in Button
 		JButton signInBtn = new JButton("Sign in");
-		signInBtn.setFont(new Font("Gulim", Font.PLAIN, 15));
+		signInBtn.setBackground(new Color(37,183,211));
+		signInBtn.setFont(new Font("Gulim", Font.BOLD, 15));
+		signInBtn.setForeground(Color.white);
 		signInBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
+
 					client = new Socket("127.0.0.1", 9996);
+
 				} catch (UnknownHostException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -165,26 +170,38 @@ public class LoginWindow extends JFrame {
 			}
 		});
 
-		signInBtn.setBounds(274, 75, 105, 61);
+		signInBtn.setBounds(281, 401, 105, 61);
 		contentPane.add(signInBtn);
 
 		// Find Button
 		JButton FindBtn = new JButton("Forgot ID/PW");
+		FindBtn.setBackground(new Color(37,183,211));
+		FindBtn.setForeground(Color.white);
 		FindBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("Find Button Clicked");
+				FindWindow.run();
+				
 			}
 		});
 
-		FindBtn.setFont(new Font("±¼¸²", Font.PLAIN, 15));
-		FindBtn.setBounds(131, 148, 129, 27);
+		FindBtn.setFont(new Font("±¼¸²", Font.BOLD, 12));
+		FindBtn.setBounds(138, 474, 129, 27);
 		contentPane.add(FindBtn);
 
 		// Sign Up Button
 		JButton signUpBtn = new JButton("Sign Up");
-		signUpBtn.setFont(new Font("Gulim", Font.PLAIN, 15));
-		signUpBtn.setBounds(274, 148, 105, 27);
+		signUpBtn.setBackground(new Color(37,183,211));
+		signUpBtn.setFont(new Font("Gulim", Font.BOLD, 12));
+		signUpBtn.setBounds(281, 474, 105, 27);
+		signUpBtn.setForeground(Color.white);
 		contentPane.add(signUpBtn);
+		
+		JLabel LoginWindowIcon = new JLabel("");
+		ImageIcon icon = new ImageIcon("titleIcon.png");
+		LoginWindowIcon.setIcon(icon);
+		LoginWindowIcon.setBounds(157, 161, 175, 129);
+		contentPane.add(LoginWindowIcon);
 		signUpBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("Sign Up Button Clicked");
@@ -193,5 +210,4 @@ public class LoginWindow extends JFrame {
 			}
 		});
 	}
-
 }
