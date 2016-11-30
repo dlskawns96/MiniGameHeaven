@@ -196,5 +196,6 @@ public class SignUpWindow extends JFrame {
 
 		signUpBtn.setBounds(165, 317, 105, 27);
 		contentPane.add(signUpBtn);
+
 	}
 }

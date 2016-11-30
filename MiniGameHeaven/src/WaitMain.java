@@ -50,12 +50,13 @@ public class WaitMain implements ActionListener, Runnable {
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
 	private JButton send;
+	JTextArea userL;
 	Heart dispHeart;
 	JTextField textField = new JTextField(40);
 	int numOfHeart = 5;
 	BufferedReader in;
 	PrintWriter out;
-	protected static String ID = "임의의 사용자";
+	protected static String ID = "asdfasdff";
 	private static String IP = "127.0.0.1";
 
 	/**
@@ -65,8 +66,11 @@ public class WaitMain implements ActionListener, Runnable {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					waitMain = new WaitMain();
+					// Thread w = new Thread();
+					// w.start();
+					 waitMain = new WaitMain();
 					// waitMain.chatRun();
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -78,12 +82,10 @@ public class WaitMain implements ActionListener, Runnable {
 	 * Create the application.
 	 */
 
-
 	WaitMain() {
-	
+
 		initialize();
-		frame.setVisible(true);
-		
+frame.setVisible(true);
 		try {
 			socket = new Socket(IP, 9999);
 			System.out.println("서버에 접속되었습니다.");
@@ -94,6 +96,10 @@ public class WaitMain implements ActionListener, Runnable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void setID(String id) {
+		this.ID = id;
 	}
 
 	/**
@@ -152,7 +158,10 @@ public class WaitMain implements ActionListener, Runnable {
 		userScroll.setBounds(442, 74, 340, 200);
 		userScroll.setBorder(tb);
 
-		JLabel userL = new JLabel("현재 접속자 : " + ID);
+		userL = new JTextArea("현재 접속자\n");
+		userL.setOpaque(true);
+		userL.setBounds(442, 74, 340, 200);
+		userL.setBackground(new Color(0,0,0,0));
 		userList.setOpaque(true);
 		userList.add(userL);
 		userList.setBackground(new Color(0, 0, 0, 90));
@@ -182,7 +191,7 @@ public class WaitMain implements ActionListener, Runnable {
 		makeGame.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				SelectGame sg = new SelectGame();
+				new SelectGame();
 			}
 		});
 
@@ -206,11 +215,12 @@ public class WaitMain implements ActionListener, Runnable {
 		send.addActionListener(this);
 		frame.getContentPane().add(send);
 		frame.setBounds(100, 100, 800, 600);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
 	@Override
 	public void run() {
+
 		String message = null;
 		String[] receiveMsg = null;
 		boolean isStop = false;
@@ -221,36 +231,36 @@ public class WaitMain implements ActionListener, Runnable {
 			} catch (Exception e) {
 				e.printStackTrace();
 				isStop = true; // 반복문 종료로 설정
-			} 
+			}
 			System.out.println(receiveMsg[0] + ":" + receiveMsg[1]);
-			if (receiveMsg[1].equals("exit")) { 
-				if (receiveMsg[0].equals(ID)) { 
+			if (receiveMsg[1].equals("exit")) {
+				if (receiveMsg[0].equals(ID)) {
 					System.exit(0);
-				} else { 
+				} else {
 					chatRoom.append(receiveMsg[0] + " 님이 종료했습니다\n");
 					chatRoom.setCaretPosition(chatRoom.getDocument().getLength());
-				} 
+				}
 			} else {
 				// 채팅 내용 보여주기
 				chatRoom.append(receiveMsg[0] + " : " + receiveMsg[1] + "\n");
 				chatRoom.setCaretPosition(chatRoom.getDocument().getLength());
-			} 
-		} 
+			}
+		}
 
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) { 
-		Object obj = e.getSource(); 
-		String msg = chatInput.getText(); 
-		if (obj == chatInput || obj == send) { 
+	public void actionPerformed(ActionEvent e) {
+		Object obj = e.getSource();
+		String msg = chatInput.getText();
+		if (obj == chatInput || obj == send) {
 			try {
 				oos.writeObject(ID + "#" + msg);
 			} catch (Exception ee) {
 				ee.printStackTrace();
-			} 
-			chatInput.setText(""); 
-		} 
+			}
+			chatInput.setText("");
+		}
 
 		/*
 		 * else if (obj == jbtn) { // 종료 버튼을 클릭한 경우 try { oos.writeObject(ID +

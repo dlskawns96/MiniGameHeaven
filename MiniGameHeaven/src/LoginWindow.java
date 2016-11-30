@@ -31,7 +31,7 @@ public class LoginWindow extends JFrame {
 	private JPanel contentPane;
 	private JTextField IDField;
 	private JPasswordField passwordField;
-
+	private static String ID;
 	private static Socket client;
 
 	/*
@@ -140,15 +140,19 @@ public class LoginWindow extends JFrame {
 
 					// 로그인 성공/실패 메시지 받기
 					message = receiver.readLine();
-					if (message.endsWith("Success")) // 로그인 성공
-					{
-						WaitMain client = new WaitMain();
+					// 로그인 성공
+					if (message.endsWith("Success")) {
+						// if (MainServer.cs.check(ID))
+						// JOptionPane.showMessageDialog(null, "이미 접속중입니다.");
+						// else {
+						new WaitMain().setID(ID);;
 						JOptionPane.showMessageDialog(null, "Success to Login!!");
 						System.out.println("Login Success");
 						setVisible(false);
 						dispose();
-					} else // 로그인 실패
-					{
+
+					} // 로그인 실패
+					else {
 						JOptionPane.showMessageDialog(null, "Failed to Login!!");
 						System.out.println("Login Failed");
 					}

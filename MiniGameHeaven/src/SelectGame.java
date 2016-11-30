@@ -37,8 +37,8 @@ public class SelectGame extends WaitMain {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SelectGame window = new SelectGame();
-					window.frameSelectGame.setVisible(true);
+					//SelectGame window = new SelectGame();
+					//window.frameSelectGame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -51,6 +51,7 @@ public class SelectGame extends WaitMain {
 	 */
 	public SelectGame() {
 		initialize();
+		
 		this.frameSelectGame.setVisible(true);
 	}
 
