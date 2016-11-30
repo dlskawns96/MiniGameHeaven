@@ -162,7 +162,7 @@ public class SignUpWindow extends JFrame {
 				String email = emailField.getText();
 				String name = nameField.getText();
 				try {
-					client = new Socket("127.0.0.1", 9997);
+					client = new Socket("127.0.0.1", 9996);
 				} catch (UnknownHostException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {

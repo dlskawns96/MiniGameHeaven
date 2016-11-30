@@ -12,7 +12,9 @@ public class ChatServer extends JFrame {
 	JTextField tf;
 	int i = 1;
 	
-	public ChatServer() {
+	public ChatServer(Thread lcThread) {
+		 
+		lcThread.start();
 		
 		setTitle("채팅 서버 ver 1.0");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,7 +47,7 @@ public class ChatServer extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new ChatServer();
+//		new ChatServer();
 	}
 
 	// 내부 클래스
