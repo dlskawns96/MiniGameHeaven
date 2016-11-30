@@ -35,7 +35,7 @@ public class LoginChecker implements Runnable {
 			System.out.println("SQLException: " + sqex.getMessage());
 			System.out.println("SQLState: " + sqex.getSQLState());
 		}
-		return false;
+		return false;//
 	}
 
 	// Check If ID is already exists, if so return true
