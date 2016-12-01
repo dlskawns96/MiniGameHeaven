@@ -22,8 +22,7 @@ public class MafiaServer {
 			{
 				MafiaServerThread newThread = new MafiaServerThread();
 				newThread.start();
-				message = receiver.readLine();
-				
+				message = receiver.readLine();				
 				//방 없애기
 				if(message.equals("end"))
 				{

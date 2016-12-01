@@ -24,12 +24,12 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
-public class SelectGame extends WaitMain {
+public class SelectGame {
 
 	JFrame frameSelectGame;
 	BufferedReader in;
 	PrintWriter out;
-
+	WaitMain waitmain;
 	/**
 	 * Launch the application.
 	 */
@@ -49,7 +49,8 @@ public class SelectGame extends WaitMain {
 	/**
 	 * Create the application.
 	 */
-	SelectGame() {
+	SelectGame(WaitMain wm) {
+		waitmain = wm;
 		initialize();
 		frameSelectGame.setVisible(true);
 	}
@@ -102,14 +103,14 @@ public class SelectGame extends WaitMain {
 		createGame.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (waitMain.numOfHeart != 0) {
-					waitMain.dispHeart.heart[5 - waitMain.numOfHeart].setIcon(waitMain.dispHeart.heartNo);
+				if (waitmain.numOfHeart != 0) {
+					waitmain.dispHeart.heart[5 - waitmain.numOfHeart].setIcon(waitmain.dispHeart.heartNo);
 					InGameOMOK ig = new InGameOMOK();
-					for (int i = 5; i >= waitMain.numOfHeart; --i) {
+					for (int i = 5; i >= waitmain.numOfHeart; --i) {
 						ig.dispHeart.heart[5 - i].setIcon(ig.dispHeart.heartNo);
 					}
-					waitMain.numOfHeart--;
-					waitMain.frame.setVisible(false);
+					waitmain.numOfHeart--;
+					waitmain.frame.setVisible(false);
 					frameSelectGame.setVisible(false);
 				} else {
 					JOptionPane.showMessageDialog(null, "하트가 부족합니다.");

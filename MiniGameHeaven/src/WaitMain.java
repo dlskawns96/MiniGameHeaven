@@ -58,6 +58,7 @@ public class WaitMain implements ActionListener, Runnable {
 	PrintWriter out;
 	protected static String ID = "asdfasdff";
 	private static String IP = "127.0.0.1";
+	WaitMain wm = this;
 
 	/**
 	 * Launch the application.
@@ -68,7 +69,7 @@ public class WaitMain implements ActionListener, Runnable {
 				try {
 					// Thread w = new Thread();
 					// w.start();
-
+					// WaitMain wm = new WaitMain();
 					// waitMain.chatRun();
 
 				} catch (Exception e) {
@@ -85,7 +86,7 @@ public class WaitMain implements ActionListener, Runnable {
 	WaitMain() {
 
 		initialize();
-		frame.setVisible(true);
+
 		try {
 			socket = new Socket(IP, 9999);
 			System.out.println("서버에 접속되었습니다.");
@@ -158,11 +159,11 @@ public class WaitMain implements ActionListener, Runnable {
 		userScroll.setBounds(442, 74, 340, 200);
 		userScroll.setBorder(tb);
 
-		
-		 userL = new JTextArea("현재 접속자\n"); userL.setOpaque(true);
-		 userL.setBounds(442, 74, 340, 200); userL.setBackground(new
-		 Color(0,0,0,0));
-		
+		userL = new JTextArea("현재 접속자\n");
+		userL.setOpaque(true);
+		userL.setBounds(442, 74, 340, 200);
+		userL.setBackground(new Color(0, 0, 0, 0));
+
 		userList.setOpaque(true);
 		userList.add(userL);
 		userList.setBackground(new Color(0, 0, 0, 90));
@@ -196,8 +197,7 @@ public class WaitMain implements ActionListener, Runnable {
 		makeGame.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new SelectGame();
-				
+				new SelectGame(wm);
 			}
 		});
 
@@ -228,7 +228,8 @@ public class WaitMain implements ActionListener, Runnable {
 
 	@Override
 	public void run() {
-
+		frame.setVisible(true);
+		System.out.println("dasldkfjasdl;fkjasd;lfkjasd;flkjasd;flkjasd;lfkjasd;lfkjasd;flkjasd;flkj");
 		String message = null;
 		String[] receiveMsg = null;
 		boolean isStop = false;

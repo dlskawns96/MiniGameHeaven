@@ -63,7 +63,7 @@ public class LoginWindow extends JFrame {
 		setIconImage(new ImageIcon("titleIcon.png").getImage());
 		setTitle("Mini Game Heaven");
 		contentPane = new JPanel();
-		contentPane.setBackground(Color.PINK);
+		contentPane.setBackground(new Color(255,213,226));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -165,6 +165,13 @@ public class LoginWindow extends JFrame {
 						setVisible(false);
 						dispose();
 					} // 로그인 실패
+
+					else {
+						IDField.setText("");
+						passwordField.setText("");
+						JOptionPane.showMessageDialog(null, "Failed to Login!!");
+						System.out.println("Login Failed");
+					}
 					client.close();
 					sender.close();
 					receiver.close();

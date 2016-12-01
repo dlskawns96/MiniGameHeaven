@@ -15,8 +15,12 @@ public class LoginChecker implements Runnable {
 	static Socket client;
 
 	public static void sqlConnect() throws SQLException, MalformedURLException {
+		
+		//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22
+		//서버 컴퓨터가 켜있으면 그 컴퓨터로 쿼리 요청 가능!!
+		
 		URL url = new URL("http://mnhServer.mooo.com");
-		con = DriverManager.getConnection("jdbc:mysql://" + "127.0.0.1" + ":3306/minigameheaven", "root", "12345");
+		con = DriverManager.getConnection("jdbc:mysql://" + url.getHost() + ":3306/minigameheaven", "root", "12345");
 		st = con.createStatement();
 		rs = null;
 	}
