@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
 
 public class MafiaGame extends JFrame{
 
@@ -12,16 +13,14 @@ public class MafiaGame extends JFrame{
 	private static JPanel contentPane;
 	Timer timer;
 	private static int r,g,b;
+	private JLabel timeLabel;
 	
 	public static void main(String[] args) {
 
 		try {
 			MafiaGame frame = new MafiaGame();
 			frame.setVisible(true);
-			while(true)
-			{
-				System.out.println("hi");
-			}
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -35,16 +34,18 @@ public class MafiaGame extends JFrame{
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		timeLabel = new JLabel("");
+		timeLabel.setFont(new Font("Yu Mincho Demibold", Font.PLAIN, 25));
+		timeLabel.setBounds(361, 0, 189, 87);
+		contentPane.add(timeLabel);
 		r = 255;
 		g = 255;
 		b = 255;
 		ColorChange colorThread = new ColorChange();
-		colorThread.start();
-		
-		
-		
+		colorThread.start();		
 	}
 	
 
@@ -58,7 +59,9 @@ public class MafiaGame extends JFrame{
 					g -= 1;
 					b -= 1;
 					contentPane.setBackground(new Color(r,g,b));
-					if (r < 10)
+					timeLabel.setText(Integer.toString(r));
+					timeLabel.setForeground(new Color(255-r,255-g,255-b));
+					if (r  == 0)
 						timer.stop();
 				}
 			};
@@ -66,8 +69,4 @@ public class MafiaGame extends JFrame{
 			timer.start();
 		}		
 	}
-	
-	
-	
-	
 }
