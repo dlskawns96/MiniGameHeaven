@@ -91,6 +91,7 @@ public class SignUpWindow extends JFrame {
 		nameField.setColumns(10);
 
 		JButton IDCheckBtn = new JButton("Check");
+		IDCheckBtn.setForeground(Color.WHITE);
 		IDCheckBtn.setBounds(293, 139, 73, 27);
 		IDCheckBtn.setBackground(new Color(37,183,211));
 		contentPane.add(IDCheckBtn);
@@ -132,6 +133,7 @@ public class SignUpWindow extends JFrame {
 		});
 
 		JButton signUpBtn = new JButton("Sign Up");
+		signUpBtn.setForeground(Color.WHITE);
 		signUpBtn.setBackground(new Color(37,183,211));
 		signUpBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
