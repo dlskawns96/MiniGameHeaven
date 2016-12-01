@@ -42,7 +42,7 @@ import javax.swing.border.EtchedBorder;
 
 public class WaitMain implements ActionListener, Runnable {
 
-	public JFrame frame;
+	public static JFrame frame;
 	private JTextField chatInput;
 	private JTextArea chatRoom;
 	public static WaitMain waitMain;
@@ -68,7 +68,7 @@ public class WaitMain implements ActionListener, Runnable {
 				try {
 					// Thread w = new Thread();
 					// w.start();
-					 waitMain = new WaitMain();
+
 					// waitMain.chatRun();
 
 				} catch (Exception e) {
@@ -85,7 +85,7 @@ public class WaitMain implements ActionListener, Runnable {
 	WaitMain() {
 
 		initialize();
-frame.setVisible(true);
+		frame.setVisible(true);
 		try {
 			socket = new Socket(IP, 9999);
 			System.out.println("서버에 접속되었습니다.");
@@ -108,7 +108,7 @@ frame.setVisible(true);
 	private void initialize() {
 
 		frame = new JFrame();
-		ImageIcon bg = new ImageIcon("BG.jpg");
+		ImageIcon bg = new ImageIcon("BG2.png");
 		JPanel jp = new JPanel() {
 			public void paintComponent(Graphics g) {
 				g.drawImage(bg.getImage(), 0, 0, null);
@@ -119,7 +119,7 @@ frame.setVisible(true);
 			}
 		};
 
-		TitledBorder tb = new TitledBorder(new LineBorder(Color.PINK, 2));
+		TitledBorder tb = new TitledBorder(new LineBorder(new Color(37, 183, 211), 3));
 		frame.setContentPane(jp);
 		frame.getContentPane().setLayout(null);
 		frame.setResizable(false);
@@ -158,10 +158,11 @@ frame.setVisible(true);
 		userScroll.setBounds(442, 74, 340, 200);
 		userScroll.setBorder(tb);
 
-		userL = new JTextArea("현재 접속자\n");
-		userL.setOpaque(true);
-		userL.setBounds(442, 74, 340, 200);
-		userL.setBackground(new Color(0,0,0,0));
+		
+		 userL = new JTextArea("현재 접속자\n"); userL.setOpaque(true);
+		 userL.setBounds(442, 74, 340, 200); userL.setBackground(new
+		 Color(0,0,0,0));
+		
 		userList.setOpaque(true);
 		userList.add(userL);
 		userList.setBackground(new Color(0, 0, 0, 90));
@@ -180,18 +181,23 @@ frame.setVisible(true);
 		joinGame.setText("\uAC8C\uC784 \uCC38\uC5EC\uD558\uAE30");
 		joinGame.setFocusable(false);
 		joinGame.setBounds(617, 510, 165, 35);
+		joinGame.setForeground(Color.white);
+		joinGame.setBackground(new Color(37, 183, 211));
 		frame.getContentPane().add(joinGame);
 
 		JButton makeGame = new JButton();
 		makeGame.setText("\uAC8C\uC784 \uB9CC\uB4E4\uAE30");
 		makeGame.setBounds(445, 510, 165, 35);
 		makeGame.setFocusable(false);
+		makeGame.setForeground(Color.white);
+		makeGame.setBackground(new Color(37, 183, 211));
 		frame.getContentPane().add(makeGame);
 
 		makeGame.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				new SelectGame();
+				
 			}
 		});
 
@@ -213,6 +219,8 @@ frame.setVisible(true);
 		send = new JButton("\uC804 \uC1A1");
 		send.setBounds(354, 510, 76, 35);
 		send.addActionListener(this);
+		send.setForeground(Color.white);
+		send.setBackground(new Color(37, 183, 211));
 		frame.getContentPane().add(send);
 		frame.setBounds(100, 100, 800, 600);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -13,7 +13,6 @@ public class FindWindow extends JFrame {
 	private JTextField IDField;
 	private Icon icon = new ImageIcon("titleIcon.png");
 	
-	
 	public static void run() {
 		try {
 			FindWindow frame = new FindWindow();

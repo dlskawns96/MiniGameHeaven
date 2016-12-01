@@ -137,30 +137,34 @@ public class LoginWindow extends JFrame {
 						message = password;
 						sender.writeBytes(message + "\n"); // 서버에게 비번 전송
 						System.out.println("Sent PW");
-					} else {
-						System.out.println("Login Failed");
+					}else if(message.endsWith("wrong")){
+						JOptionPane.showMessageDialog(null, "패스워드가 틀렸습니다.");
+						System.out.println("Login Failed1");
+						client.close();
+						return;
+					}else if(message.contains("already")){
+						JOptionPane.showMessageDialog(null, "이미 접속중인 사용자 입니다.");
+						System.out.println("Login Failed2");
+						client.close();
+						return;
+					}else{
+						JOptionPane.showMessageDialog(null, "존재하지 않는 아이디 입니다.");
+						System.out.println("Login Failed3");
 						client.close();
 						return;
 					}
 
 					// 로그인 성공/실패 메시지 받기
 					message = receiver.readLine();
+					System.out.println(message + "$$$$$$$$$$$$$$$$$");
 					// 로그인 성공
-					if (message.endsWith("Success")) {
-						// if (MainServer.cs.check(ID))
-						// JOptionPane.showMessageDialog(null, "이미 접속중입니다.");
-						// else {
-						new WaitMain().setID(ID);;
-						JOptionPane.showMessageDialog(null, "Success to Login!!");
+					if (message.contains("Success")) {
+						new WaitMain().setID(ID);
+						JOptionPane.showMessageDialog(null, ID + " 님 환영합니다!");
 						System.out.println("Login Success");
 						setVisible(false);
 						dispose();
-
 					} // 로그인 실패
-					else {
-						JOptionPane.showMessageDialog(null, "Failed to Login!!");
-						System.out.println("Login Failed");
-					}
 					client.close();
 					sender.close();
 					receiver.close();

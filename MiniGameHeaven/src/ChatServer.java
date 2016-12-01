@@ -39,8 +39,8 @@ public class ChatServer extends JFrame {
 
 			while (!isStop) {
 				socket = serverSocket.accept();// 클라이언트별 소켓 생성
-				ta.append(socket.getInetAddress() + "사용자가 접속했습니다" + i + "\n");
 				user = new User();
+				ta.append(socket.getInetAddress() + " / "  + "사용자가 접속했습니다\n");
 				//user.setID();
 				mst = new MultiServerThread();// 채팅 객체 생성
 				list.add(mst);// ArrayList에 채팅 객체 하나 담는다.

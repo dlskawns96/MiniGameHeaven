@@ -72,7 +72,7 @@ public class InGameOMOK extends WaitMain {
 	private void initialize() {
 		frame = new JFrame();
 
-		ImageIcon bg = new ImageIcon("BG.jpg");
+		ImageIcon bg = new ImageIcon("BG2.png");
 		JPanel jp = new JPanel() {
 			public void paintComponent(Graphics g) {
 				g.drawImage(bg.getImage(), 0, 0, null);

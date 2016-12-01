@@ -49,10 +49,9 @@ public class SelectGame extends WaitMain {
 	/**
 	 * Create the application.
 	 */
-	public SelectGame() {
+	SelectGame() {
 		initialize();
-		
-		this.frameSelectGame.setVisible(true);
+		frameSelectGame.setVisible(true);
 	}
 
 	/**
@@ -60,7 +59,7 @@ public class SelectGame extends WaitMain {
 	 */
 	public void initialize() {
 		frameSelectGame = new JFrame();
-		ImageIcon bg = new ImageIcon("BG.jpg");
+		ImageIcon bg = new ImageIcon("BG2.png");
 		JPanel jp = new JPanel() {
 			public void paintComponent(Graphics g) {
 				g.drawImage(bg.getImage(), 0, 0, null);
@@ -75,10 +74,14 @@ public class SelectGame extends WaitMain {
 
 		JButton leftSide = new JButton("<");
 		leftSide.setBounds(12, 249, 70, 55);
+		leftSide.setForeground(Color.white);
+		leftSide.setBackground(new Color(37,183,211));
 		frameSelectGame.getContentPane().add(leftSide);
 
 		JButton rightSide = new JButton(">");
 		rightSide.setBounds(712, 249, 70, 55);
+		rightSide.setForeground(Color.white);
+		rightSide.setBackground(new Color(37,183,211));
 		frameSelectGame.getContentPane().add(rightSide);
 
 		JPanel gameTitle = new JPanel();
@@ -91,6 +94,8 @@ public class SelectGame extends WaitMain {
 
 		JButton createGame = new JButton("\uAC8C\uC784 \uB9CC\uB4E4\uAE30");
 		createGame.setBounds(486, 465, 183, 63);
+		createGame.setForeground(Color.white);
+		createGame.setBackground(new Color(37,183,211));
 		frameSelectGame.getContentPane().add(createGame);
 		frameSelectGame.setResizable(false);
 		frameSelectGame.setIconImage(new ImageIcon("titleIcon.png").getImage());

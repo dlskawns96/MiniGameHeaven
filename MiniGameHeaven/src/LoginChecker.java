@@ -65,7 +65,7 @@ public class LoginChecker implements Runnable {
 		// 클라이언트에게 ID를 보내라고 요청
 		message = "Give me ID";
 		sender.writeBytes(message + '\n');
-		us = new UserList();
+		
 		// ID 받기
 		receivedID = receiver.readLine();
 		System.out.println("ID received");
@@ -89,15 +89,15 @@ public class LoginChecker implements Runnable {
 
 				} else {
 					System.out.println("2");
-					sender.writeBytes("패스워드가 틀렸습니다.\n"); // Login 실패
+					sender.writeBytes("Login wrong\n"); // Login 실패
 				}
 			} else {
 				System.out.println("3");
-				sender.writeBytes("이미 접속중입니다");
+				sender.writeBytes("Login already\n");
 			}
 		} else {
 			System.out.println("4");
-			sender.writeBytes("없는 아이디입니다.\n"); // Login 실패
+			sender.writeBytes("Login nothing\n"); // Login 실패
 		}
 	}
 
@@ -161,7 +161,7 @@ public class LoginChecker implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-
+		us = new UserList();
 		try {
 			// Server Connect
 			ServerSocket server = new ServerSocket(9996);
