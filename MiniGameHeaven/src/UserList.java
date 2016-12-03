@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 
 public class UserList {
@@ -14,7 +15,14 @@ public class UserList {
 			return true;
 		return false;
 	}
-	/*public void  dd{
-		System.out.println(userList.);
-	}*/
+
+	public String keySet() {
+		// Iterator<String> iterator = userList.keySet().iterator();
+		// while (iterator.hasNext()) {
+		// String key = (String) iterator.next();
+		System.out.println(userList.keySet().toString() + "아이디 뿌리는거\n");
+		//
+		return userList.keySet().toString();
+	}
+
 }
