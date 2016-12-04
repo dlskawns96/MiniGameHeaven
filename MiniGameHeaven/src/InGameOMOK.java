@@ -28,7 +28,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.SwingConstants;
 
-public class InGameOMOK extends WaitMain {
+public class InGameOMOK implements Runnable {
 
 	private JFrame frame;
 	private JTextField chatInput;
@@ -39,8 +39,9 @@ public class InGameOMOK extends WaitMain {
 	private JButton send;
 	BufferedReader in;
 	public Heart dispHeart;
+	private int numOfHeart;
 	PrintWriter out;
-
+	WaitMain waitmain;
 	/**
 	 * Launch the application.
 	 */
@@ -48,8 +49,8 @@ public class InGameOMOK extends WaitMain {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					InGameOMOK window = new InGameOMOK();
-					window.frame.setVisible(true);
+					//InGameOMOK window = new InGameOMOK();
+					//window.frame.setVisible(true);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -61,9 +62,20 @@ public class InGameOMOK extends WaitMain {
 	/**
 	 * Create the application.
 	 */
-	public InGameOMOK() {
+	public InGameOMOK(WaitMain wm) {
+		waitmain = wm;
 		initialize();
 		this.frame.setVisible(true);
+		try {
+			socket = new Socket(waitmain.IP, 9999);
+			System.out.println("서버에 접속되었습니다.");
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			ois = new ObjectInputStream(socket.getInputStream());
+			Thread t = new Thread(this);
+			t.start(); // 쓰레드 시작
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -106,7 +118,7 @@ public class InGameOMOK extends WaitMain {
 
 		cloverNum.setBounds(592, 5, 190, 35);
 		// frame.getContentPane().add(waitMain.dispHeart);
-		this.numOfHeart = waitMain.numOfHeart;
+		this.numOfHeart = waitmain.numOfHeart;
 		dispHeart = new Heart(this.numOfHeart);
 		int i = 0;
 		for (JLabel j : dispHeart.heart) {
@@ -148,7 +160,7 @@ public class InGameOMOK extends WaitMain {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				frame.setVisible(false);
-				waitMain.frame.setVisible(true);
+				waitmain.frame.setVisible(true);
 			}
 		});
 
@@ -187,7 +199,7 @@ public class InGameOMOK extends WaitMain {
 			}
 			System.out.println(receiveMsg[0] + ":" + receiveMsg[1]);
 			if (receiveMsg[1].equals("exit")) {
-				if (receiveMsg[0].equals(ID)) {
+				if (receiveMsg[0].equals(waitmain.ID)) {
 					System.exit(0);
 				} else {
 					chatRoom.append(receiveMsg[0] + " 님이 종료했습니다\n");

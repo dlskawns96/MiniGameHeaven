@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 
 import javax.swing.UIManager;
@@ -50,15 +51,19 @@ public class WaitMain implements ActionListener, Runnable {
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
 	private JButton send;
+	JLabel userList;
 	JTextArea userL;
 	Heart dispHeart;
 	JTextField textField = new JTextField(40);
 	int numOfHeart = 5;
 	BufferedReader in;
 	PrintWriter out;
-	protected static String ID = "asdfasdff";
-	private static String IP = "127.0.0.1";
+	protected static String ID = null;
+	public static String IP = null;
 	WaitMain wm = this;
+	StringBuffer sf = new StringBuffer();
+	String ss = "<html>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;현재 접속자 목록&nbsp;] <br> </html>";
+	public static String plusUser = null;
 
 	/**
 	 * Launch the application.
@@ -83,8 +88,11 @@ public class WaitMain implements ActionListener, Runnable {
 	 * Create the application.
 	 */
 
-	WaitMain() {
-
+	WaitMain(String id, String ip, String list) {
+		sf.append(ss);
+		this.ID = id;
+		this.IP = ip;
+		this.plusUser = list;
 		initialize();
 
 		try {
@@ -94,13 +102,16 @@ public class WaitMain implements ActionListener, Runnable {
 			ois = new ObjectInputStream(socket.getInputStream());
 			Thread t = new Thread(this);
 			t.start(); // 쓰레드 시작
+			oos.writeObject("LIST#" + plusUser);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void setID(String id) {
+	public void setIDIP(String id, String ip, String list) {
 		this.ID = id;
+		this.IP = ip;
+		// this.plusUser = list;
 	}
 
 	/**
@@ -152,20 +163,19 @@ public class WaitMain implements ActionListener, Runnable {
 		word.setBounds(240, 20, 190, 35);
 		frame.getContentPane().add(word);
 
-		JPanel userList = new JPanel();
+		userList = new JLabel(sf.toString());
+		userList.setForeground(new Color(25, 25, 112));
+		userList.setFont(new Font("굴림", Font.BOLD, 15));
+		userList.setPreferredSize(new java.awt.Dimension(190, 35));
+		userList.setVerticalAlignment(SwingConstants.TOP);
 		JScrollPane userScroll = new JScrollPane();
 		userScroll.setOpaque(true);
 		userScroll.setBackground(new Color(0, 0, 0, 0));
 		userScroll.setBounds(442, 74, 340, 200);
 		userScroll.setBorder(tb);
 
-		userL = new JTextArea("현재 접속자\n");
-		userL.setOpaque(true);
-		userL.setBounds(442, 74, 340, 200);
-		userL.setBackground(new Color(0, 0, 0, 0));
-
 		userList.setOpaque(true);
-		userList.add(userL);
+		// userList.add(userList);
 		userList.setBackground(new Color(0, 0, 0, 90));
 		userList.setBounds(442, 74, 340, 200);
 		userScroll.setViewportView(userList);
@@ -224,12 +234,12 @@ public class WaitMain implements ActionListener, Runnable {
 		frame.getContentPane().add(send);
 		frame.setBounds(100, 100, 800, 600);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
 	}
 
 	@Override
 	public void run() {
 		frame.setVisible(true);
-		System.out.println("dasldkfjasdl;fkjasd;lfkjasd;flkjasd;flkjasd;lfkjasd;lfkjasd;flkjasd;flkj");
 		String message = null;
 		String[] receiveMsg = null;
 		boolean isStop = false;
@@ -249,6 +259,21 @@ public class WaitMain implements ActionListener, Runnable {
 					chatRoom.append(receiveMsg[0] + " 님이 종료했습니다\n");
 					chatRoom.setCaretPosition(chatRoom.getDocument().getLength());
 				}
+			} else if (receiveMsg[0].equals("RELIST")) {
+				System.out.println("여기서 리리스트 해줌" + receiveMsg[1]);
+				plusUser = "";
+				receiveMsg[1] = receiveMsg[1].substring(1, receiveMsg[1].length() - 1);
+				System.out.println(receiveMsg[1].toString());
+				String[] temp = receiveMsg[1].toString().split(", ");
+				int i = 0;
+				for (String s : temp) {
+					System.out.println(temp[i]);
+					plusUser += "▣  " + temp[i] + "<br>";
+					i++;
+				}
+				// plusUser = receiveMsg[1];
+				sf.replace(Integer.parseInt("94"), sf.length() - 7, plusUser + "<br>");
+				userList.setText(sf.toString());
 			} else {
 				// 채팅 내용 보여주기
 				chatRoom.append(receiveMsg[0] + " : " + receiveMsg[1] + "\n");

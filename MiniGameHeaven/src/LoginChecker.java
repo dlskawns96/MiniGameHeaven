@@ -13,7 +13,7 @@ public class LoginChecker implements Runnable {
 	static ResultSet rs;
 	public static UserList us;
 	static Socket client;
-
+ChatServer ch ;
 	public static void sqlConnect() throws SQLException, MalformedURLException {
 		
 		//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22
@@ -25,6 +25,10 @@ public class LoginChecker implements Runnable {
 		rs = null;
 	}
 
+	public void getChatServer(ChatServer a){
+		
+		ch = a;
+	}
 	public static boolean passwordCheck(String password, String id) {
 		System.out.println("Login Checking...");
 		try {
@@ -89,7 +93,7 @@ public class LoginChecker implements Runnable {
 					user.setID(receivedID);
 					user.setIP(client.getInetAddress().toString());
 					us.addUserList(receivedID, user);
-					sender.writeBytes("Login Success\n"); // Login 성공
+					sender.writeBytes("Login Success#"+us.keySet()+"\n"); // Login 성공
 
 				} else {
 					System.out.println("2");

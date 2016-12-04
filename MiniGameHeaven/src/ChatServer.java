@@ -14,12 +14,12 @@ public class ChatServer extends JFrame {
 	private User user;
 	public UserList us;
 
+	ChatServer ch = this;
 	public ChatServer(Thread lcThread) {
 
 		us = new UserList();
 		lcThread.start();
 		
-
 		setTitle("채팅 서버 ver 1.0");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		ta = new JTextArea();
@@ -41,6 +41,7 @@ public class ChatServer extends JFrame {
 				socket = serverSocket.accept();// 클라이언트별 소켓 생성
 				user = new User();
 				ta.append(socket.getInetAddress() + " / "  + "사용자가 접속했습니다\n");
+				
 				//user.setID();
 				mst = new MultiServerThread();// 채팅 객체 생성
 				list.add(mst);// ArrayList에 채팅 객체 하나 담는다.
@@ -52,7 +53,9 @@ public class ChatServer extends JFrame {
 			e.printStackTrace();
 		}
 	}
-
+public void getLgServer(Thread lcTread){
+	
+}
 	public static void main(String[] args) {
 		// new ChatServer();
 	}
@@ -69,15 +72,20 @@ public class ChatServer extends JFrame {
 				ois = new ObjectInputStream(socket.getInputStream());
 				oos = new ObjectOutputStream(socket.getOutputStream());
 				String message = null; // 채팅 내용을 저장할 변수
-
+				String userList = null;
 				while (!isStop) {
 					message = (String) ois.readObject();// 클라이언트 입력 받기
 					String[] str = message.split("#");
-
+					
 					if (str[1].equals("exit")) {
 						broadCasting(message);// 모든 사용자에게 내용 전달
 						isStop = true; // 종료
-					} else {
+					}else if(str[0].equals("LIST")){
+						System.out.println("리리르스으"+str[1].toString());
+						broadCasting("RELIST#"+str[1].toString());
+						
+					}
+					else {
 						broadCasting(message);// 모든 사용자에게 채팅 내용 전달
 					}
 				}
@@ -96,11 +104,7 @@ public class ChatServer extends JFrame {
 				ct.send(message);
 			}
 		}
-		public void reList() {// 모두에게 전송
-			for (MultiServerThread ct : list) {
-				//ct.send();
-			}
-		}
+	
 		public void send(String message) { // 한 사용자에게 전송
 			try {
 				oos.writeObject(message);
