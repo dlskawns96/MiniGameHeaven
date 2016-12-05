@@ -100,7 +100,7 @@ public class SignUpWindow extends JFrame {
 				System.out.println("ID check button clicked");
 
 				try {
-					client = new Socket("127.0.0.1", 9996);
+					client = new Socket("127.0.0.1", 9002);
 				} catch (UnknownHostException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {
@@ -156,7 +156,7 @@ public class SignUpWindow extends JFrame {
 
 				String name = nameField.getText();
 				try {
-					client = new Socket("127.0.0.1", 9996);
+					client = new Socket("127.0.0.1", 9002);
 				} catch (UnknownHostException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {

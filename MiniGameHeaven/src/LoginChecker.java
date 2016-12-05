@@ -172,7 +172,7 @@ ChatServer ch ;
 		us = new UserList();
 		try {
 			// Server Connect
-			ServerSocket server = new ServerSocket(9996);
+			ServerSocket server = new ServerSocket(9002);
 			String message;
 			System.out.println("로그인 서버 실행중...");
 			// ChatServer chatServer = new ChatServer();

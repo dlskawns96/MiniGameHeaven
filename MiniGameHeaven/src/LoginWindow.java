@@ -98,7 +98,7 @@ public class LoginWindow extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 
-					client = new Socket("127.0.0.1", 9996);
+					client = new Socket("127.0.0.1", 9002);
 
 				} catch (UnknownHostException e1) {
 					// TODO Auto-generated catch block
