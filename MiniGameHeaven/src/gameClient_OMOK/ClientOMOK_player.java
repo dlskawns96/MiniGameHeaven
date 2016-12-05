@@ -196,7 +196,7 @@ public class ClientOMOK_player extends ClientOMOK implements Runnable, ActionLis
 	}
 //	■■■■■■■■■■■■■■■■■■■■■■■■■■■클라이언트 GUI E■■■■■■■■■■■■■■■■■■■■■■■■■■■
 	
-//	■■■■■■■■■■■■■■■■■■■■■■■■■■■클라이언트 Thread S■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//	■■■■■■■■■■■■■■■■■■■■■■■■■■■클라이언트 Thread S■■■■■■■■■■■■■■■■■■■■■■■■
 	public void run() {
 		// 서버로 부터 받은 메세지를 저장시킴.
 		String server_message;

@@ -160,7 +160,7 @@ public class LoginWindow extends JFrame {
 					// 로그인 성공
 					if (message.contains("Success")) {
 						String[] temp = message.split("#");
-						new WaitMain(ID, WaitMain.IP,temp[1].toString());
+						new WaitMain(ID, WaitMain.IP,temp[1].toString()).setIDIP(ID, WaitMain.IP,temp[1].toString());
 						JOptionPane.showMessageDialog(null, ID + " 님 환영합니다!");
 						System.out.println("Login Success");
 						setVisible(false);

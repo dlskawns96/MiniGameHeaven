@@ -42,6 +42,7 @@ public class InGameOMOK implements Runnable {
 	private int numOfHeart;
 	PrintWriter out;
 	WaitMain waitmain;
+
 	/**
 	 * Launch the application.
 	 */
@@ -49,8 +50,8 @@ public class InGameOMOK implements Runnable {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					//InGameOMOK window = new InGameOMOK();
-					//window.frame.setVisible(true);
+					// InGameOMOK window = new InGameOMOK();
+					// window.frame.setVisible(true);
 
 				} catch (Exception e) {
 					e.printStackTrace();
