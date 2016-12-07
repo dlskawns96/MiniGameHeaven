@@ -24,7 +24,7 @@ import javax.swing.border.TitledBorder;
 
 public class MafiaServer extends JFrame {
 
-	private static final int PORT = 9997;
+	private static final int PORT = 9995;
 
 	private static HashSet<String> names = new HashSet<String>();
 
@@ -33,7 +33,8 @@ public class MafiaServer extends JFrame {
 	private static List<MafiaPlayer> players = new ArrayList<MafiaPlayer>();
 
 	private static List<MafiaRoom> rooms = new ArrayList<MafiaRoom>();
-	
+	private static int k = 0;
+	private static int maxIndex = 0;
 	
 	public static void main(String[] args) throws Exception {
 		System.out.println("The Mafia server is running.");
@@ -54,18 +55,19 @@ public class MafiaServer extends JFrame {
 		private BufferedReader in;
 		private PrintWriter out;
 		private int roomNum;
-		private int people;
+		private int people, voted = 0;
 		private String input;
 		MafiaPlayer tmp = new MafiaPlayer();
+		MafiaPlayer tmp2 = new MafiaPlayer();
 		MafiaRoom tmpRoom = new MafiaRoom();
-
+		
 		public Handler(Socket socket) {
 			this.socket = socket;
 		}
 
 		public void run() {
 			try {
-
+				tmpRoom.peopleNum = 0;
 				in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				out = new PrintWriter(socket.getOutputStream(), true);
 
@@ -121,27 +123,19 @@ public class MafiaServer extends JFrame {
 						tmp.writer.println("<SYSTEM> " + name + " Is entered. " + Integer.toString(people));
 				}
 
-				// Accept messages from this client and broadcast them.
-				// Ignore other clients that cannot be broadcasted to.
 				while (true) {
 					input = in.readLine();
 					System.out.println(input);
 					if (input == null) {
 						return;
 					}
-					
-					// 일반 메시지 처리
-					for (int i = 0; i < players.size(); i++) {
-						tmp = players.get(i);
-						if (input.split(" ")[0].equals(Integer.toString(tmp.roomNumber)))
-							tmp.writer.println("MESSAGE " + name + ": " + input.substring(2));
-					}
+
 					// 게임 스타트 처리
 					if (input.endsWith("GameStart")) {
 						int k;
 						for (k = 0; k < rooms.size(); k++) {
 							if (rooms.get(k).roomNumber == Integer.parseInt(input.split(" ")[0])) {
-								if (rooms.get(k).peopleNum != 7)
+								if (rooms.get(k).peopleNum != 4)
 									break;
 							}
 						}
@@ -161,13 +155,109 @@ public class MafiaServer extends JFrame {
 									tmp.writer.println("GAMESTART");
 							}
 						}
+						continue;
 					}
 					
 					//역할 분배
 					if(input.startsWith("ROLE"))
 					{
-						disRole(Integer.parseInt(input.split(" ")[0]));
+						disRole(Integer.parseInt(input.split(" ")[1]));
+						continue;
 					}
+					
+					//투표 시작
+					if(input.startsWith("<VOTE>"))
+					{
+						System.out.println("Lets Vote!!!");
+						for (int i = 0; i < players.size(); i++) {
+							tmp = players.get(i);
+							if (Integer.parseInt(input.split(" ")[1]) == tmp.roomNumber)
+							{
+								System.out.println("MAKEBTN " + tmp.name);
+								for (int j = 0; j < players.size(); j++) {
+									tmp2 = players.get(j);
+									if (Integer.parseInt(input.split(" ")[1]) == tmp2.roomNumber)
+										tmp2.writer.println("MAKEBTN " + tmp.name);
+								}
+							}
+							System.out.println("@@@@@@@@@@@@@@ i = " + i);
+							
+						}
+						for (int i = 0; i < players.size(); i++) {
+							tmp = players.get(i);
+							if (Integer.parseInt(input.split(" ")[1]) == tmp.roomNumber)
+								tmp.writer.println("END"+ " .");
+						}
+						continue;
+					}
+					//표결
+					if(input.startsWith("VOTEFOR"))
+					{
+						for (int i = 0; i < players.size(); i++) {
+							tmp = players.get(i);
+							if (input.split(" ")[1].equals(Integer.toString(tmp.roomNumber)))
+							{
+								if(tmp.name.equals(input.split(" ")[2]))
+								{
+									tmp.voted++;
+									players.set(i, tmp);
+									System.out.println("%%%%%% : " + players.get(i).voted);
+								}
+							}
+							
+						}
+						k++;
+						// 개표 끝	
+						if(Integer.parseInt(input.split(" ")[3]) == k )
+						{
+							System.out.println("The Reult is ...");
+						
+							int max = -1;
+							for (int i = 0; i < players.size(); i++) {
+								tmp = players.get(i);
+								if (input.split(" ")[1].equals(Integer.toString(tmp.roomNumber)))
+								{
+									if(players.get(i).voted > max)
+									{
+										maxIndex = i;
+										max = players.get(i).voted;
+									}
+								}
+							}
+							for (int i = 0; i < players.size(); i++) {
+								tmp = players.get(i);
+								if (input.split(" ")[1].equals(Integer.toString(tmp.roomNumber)))
+								{
+									tmp.writer.println("RESULT " + players.get(maxIndex).name);
+								}
+							}
+						}
+						continue;
+					}
+					
+					if(input.endsWith("<NIGHT>"))
+					{
+						System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+						for (int i = 0; i < players.size(); i++) {
+							tmp = players.get(i);
+							if (input.split(" ")[0].equals(Integer.toString(tmp.roomNumber)))
+							{	
+								if(!tmp.name.equals(players.get(maxIndex).name))
+									tmp.writer.println("<NIGHT>");						
+							}
+						}
+						maxIndex = 0;
+						k = 0;
+						continue;
+					}
+					
+					// 일반 메시지 처리
+					for (int i = 0; i < players.size(); i++) {
+						tmp = players.get(i);
+						if (input.split(" ")[0].equals(Integer.toString(tmp.roomNumber)))
+							tmp.writer.println("MESSAGE " + name + ": " + input.substring(2));
+					}
+					
 
 				}
 			} catch (IOException e) {
@@ -209,7 +299,8 @@ public class MafiaServer extends JFrame {
 		
 		Random rand = new Random();
 		int r;
-		int mafia = 2, civil = 3;
+		int mafia = 1, civil = 1;
+		
 		
 		for (int i = 0; i < players.size(); i++) {
 			tmp = players.get(i);
@@ -217,6 +308,28 @@ public class MafiaServer extends JFrame {
 				playersInRoom.add(tmp);
 		}
 		
+		tmp = playersInRoom.get(0);
+		tmp.role = "mafia";
+		tmp.writer.println("mafia");
+		playersInRoom.set(0, tmp);
+		
+		tmp = playersInRoom.get(1);
+		tmp.role = "mafia";
+		tmp.writer.println("mafia");
+		playersInRoom.set(1, tmp);
+		
+		tmp = playersInRoom.get(2);
+		tmp.role = "mafia";
+		tmp.writer.println("mafia");
+		playersInRoom.set(2, tmp);
+		
+		tmp = playersInRoom.get(3);
+		tmp.role = "mafia";
+		tmp.writer.println("mafia");
+		playersInRoom.set(3, tmp);
+		
+		
+		/*
 		for(;mafia > 0; mafia--)
 		{
 			r = rand.nextInt(playersInRoom.size());
@@ -254,6 +367,6 @@ public class MafiaServer extends JFrame {
 			tmp.writer.println("civil");
 			playersInRoom.set(r, tmp);
 		}
-		
+		*/
 	}
 }
