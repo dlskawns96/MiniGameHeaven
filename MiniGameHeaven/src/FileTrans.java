@@ -31,12 +31,13 @@ class FileSender extends Thread{ //파일서버 역할 outputstream으로 파일을 클라이�
     @Override
     public void run() {
         try {
-            ServerSocket serverSocket = new ServerSocket(9990);
+            ServerSocket serverSocket = new ServerSocket(9327);
             System.out.println("====================> 파일서버 세팅완료");
             serverSocket.setSoTimeout(5000);
            
             Socket socket = serverSocket.accept();
             System.out.println("====================> 파일전송 시작");
+            System.out.println(filePath);
             FileInputStream fis = new FileInputStream(filePath);
             BufferedInputStream bis = new BufferedInputStream(fis);
            
@@ -82,7 +83,7 @@ class FileReceiver extends Thread{
     public FileReceiver(String ip,String filename) {
         try {
             this.filename = filename;
-            socket = new Socket(ip,9990);
+            socket = new Socket(ip,9327);
             System.out.println("====================> 파일다운로드 시작");
             in = socket.getInputStream();
             bis = new BufferedInputStream(in);
@@ -96,7 +97,6 @@ class FileReceiver extends Thread{
    
     @Override
     public void run() {
-       
        
         try {
             String fileSeparator = System.getProperty("file.separator");
