@@ -6,6 +6,9 @@ import java.util.TimerTask;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import org.omg.CORBA.Environment;
+
 import java.awt.event.*;
 import java.awt.Color;
 
@@ -26,7 +29,8 @@ public class MafiaClient extends JFrame {
 	private  int r, g, b;
 	private JLabel dayOrnight;
 	private boolean isMaster = false;
-	private int people = 4;
+	private int people = 5;
+	private int mafiaNum = 2;
 	private JLabel peopleInRoom;
 	private JButton gameStartBtn;
 	private JLabel roleLabel;
@@ -34,10 +38,9 @@ public class MafiaClient extends JFrame {
 	private int p;
 	private int k = 0;
 	private String tmp;
-	private Col col = new Col();
-	private Col2 col2 = new Col2();
-	private Make mak = new Make();
+	private String playerL = "";
 	public int time = 0;
+	JTextArea playerList;
 	
 	/**
 	 * Launch the application.
@@ -48,8 +51,9 @@ public class MafiaClient extends JFrame {
 	public static void main(String[] args) throws IOException, InterruptedException {
 
 		// for test
-		MafiaClient b = new MafiaClient("C4", "127.0.0.1", 4, false);
+		MafiaClient b = new MafiaClient("C456", "127.0.0.1", 5, false);
 		b.run();		
+	
 		
 	}
 
@@ -89,21 +93,12 @@ public class MafiaClient extends JFrame {
 		JButton chatBtn = new JButton("Enter");
 		chatBtn.setBounds(525, 433, 105, 27);
 		contentPane.add(chatBtn);
-		
-
-		JScrollPane userScroll = new JScrollPane();
-		userScroll.setBounds(532, 50, 196, 136);
-		contentPane.add(userScroll);
-
-		JTextArea playerList = new JTextArea();
-		playerList.setEditable(false);
-		userScroll.setViewportView(playerList);
 
 		gameStartBtn = new JButton("Game Start");
 		gameStartBtn.setBounds(525, 372, 105, 50);
 		gameStartBtn.setEnabled(isMaster);
 		contentPane.add(gameStartBtn);
-		System.out.println("GAMESTARTBTN @@@@ : " + gameStartBtn.getText());
+
 		
 		
 		dayOrnight = new JLabel();
@@ -118,6 +113,10 @@ public class MafiaClient extends JFrame {
 		roleLabel = new JLabel();
 		roleLabel.setBounds(530, 349, 100, 15);
 		contentPane.add(roleLabel);
+		
+		playerList = new JTextArea();
+		playerList.setBounds(532, 51, 196, 113);
+		contentPane.add(playerList);
 		
 		for(p = 0; p < 7; p++)
 		{
@@ -138,7 +137,10 @@ public class MafiaClient extends JFrame {
 		vote[0].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(vote[0].getText());
-				out.println("VOTEFOR " + roomNum + " " + vote[0].getText() + " " + people);
+				if(r <= 75)
+					out.println("VOTEFOR " + roomNum + " " + vote[0].getText() + " " + people);
+				else
+					out.println("VOTEFOR " + roomNum + " " + vote[0].getText() + " " + mafiaNum);
 				for(int k = 0; k < 7; k++)
 					vote[k].setEnabled(false);
 			}
@@ -147,7 +149,10 @@ public class MafiaClient extends JFrame {
 		vote[1].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(vote[1].getText());
-				out.println("VOTEFOR " + roomNum + " " + vote[1].getText() + " " + people);
+				if(r <= 75)
+					out.println("VOTEFOR " + roomNum + " " + vote[1].getText() + " " + people);
+				else
+					out.println("VOTEFOR " + roomNum + " " + vote[1].getText() + " " + mafiaNum);
 				for(int k = 0; k < 7; k++)
 					vote[k].setEnabled(false);
 			}
@@ -155,8 +160,10 @@ public class MafiaClient extends JFrame {
 		
 		vote[2].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(vote[2].getText());
-				out.println("VOTEFOR " + roomNum + " " + vote[2].getText() + " " + people);
+				System.out.println(vote[2].getText());if(r == 0)
+					out.println("VOTEFOR " + roomNum + " " + vote[2].getText() + " " + people);
+				else
+					out.println("VOTEFOR " + roomNum + " " + vote[2].getText() + " " + mafiaNum);
 				for(int k = 0; k < 7; k++)
 					vote[k].setEnabled(false);
 			}
@@ -165,7 +172,10 @@ public class MafiaClient extends JFrame {
 		vote[3].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(vote[3].getText());
-				out.println("VOTEFOR " + roomNum + " " + vote[3].getText() + " " + people);
+				if(r <= 75)
+					out.println("VOTEFOR " + roomNum + " " + vote[3].getText() + " " + people);
+				else
+					out.println("VOTEFOR " + roomNum + " " + vote[3].getText() + " " + mafiaNum);
 				for(int k = 0; k < 7; k++)
 					vote[k].setEnabled(false);
 			}
@@ -174,7 +184,10 @@ public class MafiaClient extends JFrame {
 		vote[4].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(vote[4].getText());
-				out.println("VOTEFOR " + roomNum + " " + vote[4].getText() + " " + people);
+				if(r <= 75)
+					out.println("VOTEFOR " + roomNum + " " + vote[4].getText() + " " + people);
+				else
+					out.println("VOTEFOR " + roomNum + " " + vote[4].getText() + " " + mafiaNum);
 				for(int k = 0; k < 7; k++)
 					vote[k].setEnabled(false);
 			}
@@ -183,7 +196,10 @@ public class MafiaClient extends JFrame {
 		vote[5].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(vote[5].getText());
-				out.println("VOTEFOR " + roomNum + " " + vote[5].getText() + " " + people);
+				if(r <= 75)
+					out.println("VOTEFOR " + roomNum + " " + vote[5].getText() + " " + people);
+				else
+					out.println("VOTEFOR " + roomNum + " " + vote[5].getText() + " " + mafiaNum);
 				for(int k = 0; k < 7; k++)
 					vote[k].setEnabled(false);
 			}
@@ -192,7 +208,10 @@ public class MafiaClient extends JFrame {
 		vote[6].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(vote[6].getText());
-				out.println("VOTEFOR " + roomNum + " " + vote[6].getText() + " " + people);
+				if(r <= 75)
+					out.println("VOTEFOR " + roomNum + " " + vote[6].getText() + " " + people);
+				else
+					out.println("VOTEFOR " + roomNum + " " + vote[6].getText() + " " + mafiaNum);
 				for(int k = 0; k < 7; k++)
 					vote[k].setEnabled(false);
 			}
@@ -232,17 +251,27 @@ public class MafiaClient extends JFrame {
 		r = 255;
 		g = 255;
 		b = 255;
-		// Make connection and initialize streams
+
 		Socket socket = new Socket(IP, 9995);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		out = new PrintWriter(socket.getOutputStream(), true);
 
-		// Process all messages from server, according to the protocol.
 		while (true) {
 			String line = in.readLine();
 			if (line.startsWith("SUBMITNAME")) {
 				out.println(ID);
-			} else if (line.startsWith("SUBMITROOM")) {
+			} else if(line.startsWith("<NEW>")) {
+				playerL = playerL +line.split(" ")[1] +"\n";
+
+				playerList.setText(playerL);
+				messageArea.append("<SYSTEM> " + line.split(" ")[1]+" is entered.\n");
+			} else if(line.startsWith("<EXIT>")) {
+				String tp = line.split(" ")[1];
+				playerL.replace(tp, "");
+				playerList.setText(playerL);
+				messageArea.append("<SYSTEM> " + line.split(" ")[1]+" is exit.\n");
+			}
+			else if (line.startsWith("SUBMITROOM")) {
 				if (isMaster)
 					out.println(roomNum + " MASTER");
 				else
@@ -253,17 +282,20 @@ public class MafiaClient extends JFrame {
 				messageArea.append(line.substring(8) + "\n");
 			} else if (line.startsWith("<SYSTEM>")) { 
 				peopleInRoom.setText("People In Room : " + line.split(" ")[line.split(" ").length - 1]);
-				messageArea.append(line + "\n");
 			} else if (line.startsWith("From") || line.startsWith("To")) { 
 				messageArea.append(line + "\n");
 			} else if (line.startsWith("GAMESTART")) {
 				gameStartBtn.setEnabled(false);
 				mafiaStart();
 			} else if(line.startsWith("MAKEBTN")) {
+				System.out.println("RRRRRRRR = " + r);
+				if(r > 75)
+				{
+					if(!role.equals("mafia"))
+						continue; 
+				}
 				tmp = line;
 				try {						
-					System.out.println("#################################");
-					System.out.println("TMP!!!!!!!!!!!  : " + tmp);
 					while(!tmp.split(" ")[0].equals("END"))
 					{
 						System.out.println(tmp);
@@ -286,25 +318,74 @@ public class MafiaClient extends JFrame {
 					e1.printStackTrace();
 				}
 			} else if(line.startsWith("RESULT")) {
+				k = 0;
+				
 				System.out.println(line.split(" ")[1] + " is Died");
 				messageArea.append("Result : " + line.split(" ")[1] + " is Died\n");
-				messageArea.append("Now it's night, only mafias can talk...\n");
+				if(r <= 75)
+					messageArea.append("Now it's night, only mafias can talk...\n");
+				else
+					messageArea.append("It's Day time.\n");
 				if(line.split(" ")[1].equals(ID))
 				{
-					out.println(roomNum + " <NIGHT>");
+					if(role.equals("mafia"))
+					{
+						out.println(roomNum + " <MINUSMAFIA>");
+						
+					}
+					else
+					{	
+						out.println(roomNum + " <MINUSPEOPLE>");											
+					}
+					if(r <= 75)
+						out.println(roomNum + " <NIGHT>");
+					else
+						out.println(roomNum + " <DAY>");
 					System.out.println("Im died");
 					JOptionPane.showMessageDialog(null,"You are died!!");
-					socket.close();
-					this.dispose();
+					System.exit(1);
 					break;
 				}
+				messageArea.append(line.split(" ")[1] + " died!!\n");
 			} else if(line.startsWith("<NIGHT>")) {
-				System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-				col2.start();
+
+				new Col2().start();
 				if(!(role.equals("mafia")))
 				{
 					textField.setEnabled(false);
 					messageArea.setVisible(false);
+				}
+				continue;
+			} else if(line.startsWith("<DAY>")) {
+				textField.setEnabled(true);
+				messageArea.setVisible(true);
+				new Col().start();
+			} else if(line.startsWith("<MINUSPEOPLE>")) {
+				people--;
+				if(people == 2)
+				{
+					if(mafiaNum != 0)
+					{
+						JOptionPane.showMessageDialog(null,"GAME OVER\n MAFIAS WIN!!");
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null,"GAME OVER\n CIVILS WIN!!");
+					}
+				}
+			} else if(line.startsWith("<MINUSMAFIA>")) {
+				people--;
+				mafiaNum--;
+				if(people == 2)
+				{
+					if(mafiaNum != 0)
+					{
+						JOptionPane.showMessageDialog(null,"GAME OVER\n MAFIAS WIN!!");
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null,"GAME OVER\n CIVILS WIN!!");
+					}
 				}
 			}
 			messageArea.setCaretPosition(messageArea.getDocument().getLength());
@@ -312,7 +393,7 @@ public class MafiaClient extends JFrame {
 	}
 
 	private void mafiaStart() throws IOException {
-		col.start();	
+		new Col().start();	
 		out.println("ROLE " + roomNum);
 		role = in.readLine();
 		roleLabel.setText("You are " + role.toUpperCase());
@@ -340,6 +421,7 @@ public class MafiaClient extends JFrame {
 			dayOrnight.setText("Day left : " + (10-time));
 			dayOrnight.setForeground(new Color(255 - r, 255 - g, 255 - b));
 			peopleInRoom.setForeground(new Color(255 - r, 255 - g, 255 - b));
+			roleLabel.setForeground(new Color(255 - r, 255 - g, 255 - b));
 			if(time >= 10)
 			{
 				r = 0;
@@ -349,9 +431,10 @@ public class MafiaClient extends JFrame {
 				contentPane.setBackground(new Color(0, 0, 0));
 				dayOrnight.setForeground(new Color(255, 255, 255));
 				peopleInRoom.setForeground(new Color(255, 255, 255));
+				roleLabel.setForeground(new Color(255, 255, 255));
 				time = 0;
 				t.stop();
-				mak.start();			
+				new Make().start();		
 			}
 		}
 	}
@@ -361,6 +444,11 @@ public class MafiaClient extends JFrame {
 		Timer t = new Timer(1000,this);
 		public void run()
 		{	
+			for(int i = 0; i < 7; i++)
+			{
+				vote[i].setEnabled(false);
+				vote[i].setVisible(false);
+			}
 			t = new Timer(1000,this);		
 			t.start();				
 		}
@@ -376,6 +464,7 @@ public class MafiaClient extends JFrame {
 			dayOrnight.setText("Day left : " + (10 - time + 1));
 			dayOrnight.setForeground(new Color(255 - r, 255 - g, 255 - b));
 			peopleInRoom.setForeground(new Color(255 - r, 255 - g, 255 - b));
+			roleLabel.setForeground(new Color(255 - r, 255 - g, 255 - b));
 			if(time >= 10)
 			{
 				r = 255;
@@ -385,9 +474,10 @@ public class MafiaClient extends JFrame {
 				dayOrnight.setText("It's Day");
 				dayOrnight.setForeground(new Color(255 - r, 255 - g, 255 - b));
 				peopleInRoom.setForeground(new Color(255 - r, 255 - g, 255 - b));
+				roleLabel.setForeground(new Color(255 - r, 255 - g, 255 - b));
 				time = 0;
 				t.stop();
-				mak.start();
+				new Make().start();
 			}
 		}
 	}
@@ -397,15 +487,10 @@ public class MafiaClient extends JFrame {
 		public void run()
 		{			
 			if(isMaster) {
-				out.println("<VOTE>"   + " " + roomNum);	
+				out.println("<VOTE>"   + " " + roomNum);
+			
 			}
 			System.out.println("OK!!");
 		}
 	}
-	
-	
-	
-
-	
-	
 }

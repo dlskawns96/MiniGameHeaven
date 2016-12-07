@@ -120,7 +120,10 @@ public class MafiaServer extends JFrame {
 				for (int i = 0; i < players.size(); i++) {
 					tmp = players.get(i);
 					if (roomNum == tmp.roomNumber)
+					{	
 						tmp.writer.println("<SYSTEM> " + name + " Is entered. " + Integer.toString(people));
+						tmp.writer.println("<NEW> "+name);
+					}
 				}
 
 				while (true) {
@@ -135,7 +138,7 @@ public class MafiaServer extends JFrame {
 						int k;
 						for (k = 0; k < rooms.size(); k++) {
 							if (rooms.get(k).roomNumber == Integer.parseInt(input.split(" ")[0])) {
-								if (rooms.get(k).peopleNum != 4)
+								if (rooms.get(k).peopleNum != 5)
 									break;
 							}
 						}
@@ -144,7 +147,7 @@ public class MafiaServer extends JFrame {
 							for (int i = 0; i < players.size(); i++) {
 								tmp = players.get(i);
 								if (input.split(" ")[0].equals(Integer.toString(tmp.roomNumber)))
-									tmp.writer.println("MESSAGE " + "You Need 7 people");
+									tmp.writer.println("MESSAGE " + "You Need 5 people");
 							}
 						}
 						else
@@ -213,6 +216,7 @@ public class MafiaServer extends JFrame {
 							System.out.println("The Reult is ...");
 						
 							int max = -1;
+							maxIndex = 0;
 							for (int i = 0; i < players.size(); i++) {
 								tmp = players.get(i);
 								if (input.split(" ")[1].equals(Integer.toString(tmp.roomNumber)))
@@ -230,6 +234,19 @@ public class MafiaServer extends JFrame {
 								{
 									tmp.writer.println("RESULT " + players.get(maxIndex).name);
 								}
+							}
+							
+							for (int i = 0; i < players.size(); i++) {
+								tmp = players.get(i);
+								if (input.split(" ")[1].equals(Integer.toString(tmp.roomNumber)))
+								{
+									if(tmp.name.equals(input.split(" ")[2]))
+									{
+										tmp.voted = 0;
+										players.set(i, tmp);
+									}
+								}
+								
 							}
 						}
 						continue;
@@ -251,6 +268,46 @@ public class MafiaServer extends JFrame {
 						continue;
 					}
 					
+					if(input.endsWith("<DAY>"))
+					{
+						System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+						for (int i = 0; i < players.size(); i++) {
+							tmp = players.get(i);
+							if (input.split(" ")[0].equals(Integer.toString(tmp.roomNumber)))
+							{	
+								if(!tmp.name.equals(players.get(maxIndex).name))
+									tmp.writer.println("<DAY>");						
+							}
+						}
+						maxIndex = 0;
+						k = 0;
+						continue;
+					}
+					
+					
+					if(input.endsWith("<MINUSPEOPLE>"))
+					{
+						for (int i = 0; i < players.size(); i++) {
+							tmp = players.get(i);
+							if (input.split(" ")[0].equals(Integer.toString(tmp.roomNumber)))
+							{	
+								tmp.writer.println("<MINUSPEOPLE>");						
+							}
+						}
+						continue;
+					}
+					
+					if(input.endsWith("<MINUSMAFIA>"))
+					{
+						for (int i = 0; i < players.size(); i++) {
+							tmp = players.get(i);
+							if (input.split(" ")[0].equals(Integer.toString(tmp.roomNumber)))
+							{	
+								tmp.writer.println("<MINUSMAFIA>");						
+							}
+						}
+						continue;
+					}
 					// 일반 메시지 처리
 					for (int i = 0; i < players.size(); i++) {
 						tmp = players.get(i);
@@ -320,13 +377,18 @@ public class MafiaServer extends JFrame {
 		
 		tmp = playersInRoom.get(2);
 		tmp.role = "mafia";
-		tmp.writer.println("mafia");
+		tmp.writer.println("civil");
 		playersInRoom.set(2, tmp);
 		
 		tmp = playersInRoom.get(3);
 		tmp.role = "mafia";
-		tmp.writer.println("mafia");
+		tmp.writer.println("civil");
 		playersInRoom.set(3, tmp);
+		
+		tmp = playersInRoom.get(4);
+		tmp.role = "mafia";
+		tmp.writer.println("civil");
+		playersInRoom.set(4, tmp);
 		
 		
 		/*
