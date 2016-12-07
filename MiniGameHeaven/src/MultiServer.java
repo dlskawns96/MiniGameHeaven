@@ -527,7 +527,7 @@ public class MultiServer {
 								// fileReceiver|ip|fileName;
 								// String fileName =
 								// tmpfilePath.substring(tmpfilePath.lastIndexOf("\\")+1);
-								// //파일 명만 추출
+								// //파일 명만 추s출
 								String fileName = new File(tmpfilePath).getName();
 								out.writeUTF("fileReceiver|" + tmpfileServerIP + "|" + fileName);
 

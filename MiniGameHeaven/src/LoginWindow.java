@@ -97,7 +97,6 @@ public class LoginWindow extends JFrame {
 		signInBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-
 					client = new Socket("127.0.0.1", 9002);
 
 				} catch (UnknownHostException e1) {

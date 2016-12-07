@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import java.awt.Color;
 import java.awt.Dimension;
 
+import javax.swing.JFileChooser;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -20,6 +21,9 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
@@ -35,6 +39,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
 import javax.swing.border.SoftBevelBorder;
@@ -48,16 +53,17 @@ public class WaitMain implements ActionListener, Runnable {
 	private JTextArea chatRoom;
 	public static WaitMain waitMain;
 	private Socket socket;
-	private ObjectInputStream ois;
-	private ObjectOutputStream oos;
+	private DataInputStream ois;
+	private DataOutputStream oos;
 	private JButton send;
 	JLabel userList;
 	JTextArea userL;
+	String filePath;
 	Heart dispHeart;
 	JTextField textField = new JTextField(40);
 	int numOfHeart = 5;
-	BufferedReader in;
-	PrintWriter out;
+	DataInputStream in;
+	DataOutputStream out;
 	protected static String ID = null;
 	public static String IP = null;
 	WaitMain wm = this;
@@ -74,7 +80,8 @@ public class WaitMain implements ActionListener, Runnable {
 				try {
 					// Thread w = new Thread();
 					// w.start();
-					// WaitMain wm = new WaitMain();
+					WaitMain wm = new WaitMain("dd", "127.0.0.1", "dd");
+
 					// waitMain.chatRun();
 
 				} catch (Exception e) {
@@ -94,15 +101,15 @@ public class WaitMain implements ActionListener, Runnable {
 		this.IP = ip;
 		this.plusUser = list;
 		initialize();
-
+		frame.setVisible(true);
 		try {
 			socket = new Socket(IP, 9003);
 			System.out.println("서버에 접속되었습니다.");
-			oos = new ObjectOutputStream(socket.getOutputStream());
-			ois = new ObjectInputStream(socket.getInputStream());
+			out = new DataOutputStream(socket.getOutputStream());
+			in = new DataInputStream(socket.getInputStream());
 			Thread t = new Thread(this);
 			t.start(); // 쓰레드 시작
-			oos.writeObject("LIST#" + plusUser);
+			out.writeUTF("LIST#" + plusUser);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -150,21 +157,15 @@ public class WaitMain implements ActionListener, Runnable {
 		chatInput.addActionListener(this);
 		frame.getContentPane().add(chatInput);
 		chatInput.setColumns(10);
-		// frame.setOpacity(0.5f);
-		/*
-		 * chatInput.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent arg0) { //
-		 * out.println(chatInput.getText()); chatRoom.append(chatInput.getText()
-		 * + '\n'); chatInput.setText(""); } });
-		 */
 
-		JPanel word = new JPanel();
+		JLabel word = new JLabel(ID);
+		word.setFont(new Font("굴림", Font.BOLD, 15));
+		word.setForeground(Color.WHITE);
 		word.setBounds(240, 20, 190, 35);
 		frame.getContentPane().add(word);
 
 		userList = new JLabel(sf.toString());
-		userList.setForeground(new Color(25, 25, 112));
+		userList.setForeground(Color.white);
 		userList.setFont(new Font("굴림", Font.BOLD, 15));
 		userList.setPreferredSize(new java.awt.Dimension(190, 35));
 		userList.setVerticalAlignment(SwingConstants.TOP);
@@ -226,7 +227,7 @@ public class WaitMain implements ActionListener, Runnable {
 			i++;
 		}
 
-		send = new JButton("\uC804 \uC1A1");
+		send = new JButton("파일");
 		send.setBounds(354, 510, 76, 35);
 		send.addActionListener(this);
 		send.setForeground(Color.white);
@@ -238,6 +239,35 @@ public class WaitMain implements ActionListener, Runnable {
 	}
 
 	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object obj = e.getSource();
+		String msg = chatInput.getText();
+		JFileChooser jfc = new JFileChooser();
+
+		if (obj == chatInput) {
+			try {
+				out.writeUTF(ID + "#" + msg);
+			} catch (Exception ee) {
+				ee.printStackTrace();
+			}
+			chatInput.setText("");
+		}
+		if (obj == send) {
+			if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+				filePath = "FILE#" + jfc.getSelectedFile().toString();
+			
+			try {
+				if(filePath!="")
+				out.writeUTF(filePath+"#"+this.ID);
+				filePath = "";
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	@Override
 	public void run() {
 		frame.setVisible(true);
 		String message = null;
@@ -245,21 +275,48 @@ public class WaitMain implements ActionListener, Runnable {
 		boolean isStop = false;
 		while (!isStop) {
 			try {
-				message = (String) ois.readObject();// 채팅내용
+				message = in.readUTF();// 채팅내용
 				receiveMsg = message.split("#");
 			} catch (Exception e) {
 				e.printStackTrace();
 				isStop = true; // 반복문 종료로 설정
 			}
-			System.out.println(receiveMsg[0] + ":" + receiveMsg[1]);
-			if (receiveMsg[1].equals("exit")) {
-				if (receiveMsg[0].equals(ID)) {
-					System.exit(0);
-				} else {
-					chatRoom.append(receiveMsg[0] + " 님이 종료했습니다\n");
-					chatRoom.setCaretPosition(chatRoom.getDocument().getLength());
+			// System.out.println(receiveMsg[0] + ":" + receiveMsg[1]);
+			if (receiveMsg[0].equals("req_fileSend")) {
+				chatRoom.append(this.ID+receiveMsg[1]);
+				chatRoom.setCaretPosition(chatRoom.getDocument().getLength());
+				try {
+					out.writeUTF("fileSend# ");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			} else if (receiveMsg[0].equals("RELIST")) {
+			}else if (receiveMsg[0].startsWith("fileSender")) { // 파일을 보내기위해
+				try {
+					//this.chatRoom.append("파일 전송이 완료되었습니다!\n");
+					new FileSender(this.filePath).start(); // 쓰레드 실행.
+				} catch (Exception e) {
+					System.out.println("FileSender 쓰레드 오류:");
+					e.printStackTrace();
+				}
+			}else if (receiveMsg[0].startsWith("fileReceiver")) { // 파일받기
+				// fileReceiver|ip|fileName;
+
+				String ip = receiveMsg[1]; // 서버의 아이피를 전달 받음
+				String fileName = receiveMsg[2]; // 서버에서 전송할 파일이름.
+
+				try {
+					new FileReceiver(ip, fileName).start(); // 쓰레드 실행.
+				} catch (Exception e) {
+					System.out.println("FileSender 쓰레드 오류:");
+					e.printStackTrace();
+				}
+
+			} else if (receiveMsg[0].startsWith("req_exit")) { // 종료
+
+			}
+
+			else if (receiveMsg[0].equals("RELIST")) {
 				System.out.println("여기서 리리스트 해줌" + receiveMsg[1]);
 				plusUser = "";
 				receiveMsg[1] = receiveMsg[1].substring(1, receiveMsg[1].length() - 1);
@@ -268,7 +325,7 @@ public class WaitMain implements ActionListener, Runnable {
 				int i = 0;
 				for (String s : temp) {
 					System.out.println(temp[i]);
-					plusUser += "▣  " + temp[i] + "<br>";
+					plusUser += " ＊   " + temp[i] + "<br>";
 					i++;
 				}
 				// plusUser = receiveMsg[1];
@@ -280,26 +337,5 @@ public class WaitMain implements ActionListener, Runnable {
 				chatRoom.setCaretPosition(chatRoom.getDocument().getLength());
 			}
 		}
-
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		Object obj = e.getSource();
-		String msg = chatInput.getText();
-		if (obj == chatInput || obj == send) {
-			try {
-				oos.writeObject(ID + "#" + msg);
-			} catch (Exception ee) {
-				ee.printStackTrace();
-			}
-			chatInput.setText("");
-		}
-
-		/*
-		 * else if (obj == jbtn) { // 종료 버튼을 클릭한 경우 try { oos.writeObject(ID +
-		 * "#exit"); } catch (Exception ee) { ee.printStackTrace(); } // catch
-		 * System.exit(0); }
-		 */ // else if : 종료 버튼
-	}// actionPerformed
 }

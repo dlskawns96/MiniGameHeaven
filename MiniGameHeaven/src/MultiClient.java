@@ -59,6 +59,7 @@ public class MultiClient extends JFrame implements ActionListener {
 	int numOfHeart = 5;
 	BufferedReader in;
 	PrintWriter out;
+	String filePath;
 	protected static String ID = null;
 	public static String IP = null;
 	StringBuffer sf = new StringBuffer();
@@ -181,11 +182,12 @@ public class MultiClient extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
-		JLabel jlb = new JLabel(" ");
+		
 		JFileChooser jfc = new JFileChooser();
 		if (obj == send) {
 			if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-				jlb.setText("열기 경로 : " + jfc.getSelectedFile().toString());
+				filePath = jfc.getSelectedFile().toString();
+			chatRoom.append(filePath+"\n");
 		}
 	}
 
