@@ -123,10 +123,7 @@ public class SelectGame implements ActionListener {
 			public void actionPerformed(ActionEvent arg0) {
 				if (waitmain.numOfHeart != 0) {
 					waitmain.dispHeart.heart[5 - waitmain.numOfHeart].setIcon(waitmain.dispHeart.heartNo);
-					InGameOMOK ig = new InGameOMOK(waitmain);
-					for (int i = 5; i >= waitmain.numOfHeart; --i) {
-						ig.dispHeart.heart[5 - i].setIcon(ig.dispHeart.heartNo);
-					}
+					
 					waitmain.numOfHeart--;
 					waitmain.frame.setVisible(false);
 					frameSelectGame.setVisible(false);
