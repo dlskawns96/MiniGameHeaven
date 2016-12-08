@@ -51,9 +51,8 @@ public class MafiaClient extends JFrame {
 	public static void main(String[] args) throws IOException, InterruptedException {
 
 		// for test
-		MafiaClient b = new MafiaClient("C456", "127.0.0.1", 5, false);
+		MafiaClient b = new MafiaClient("네트워크", "127.0.0.1", 5, false);
 		b.run();		
-	
 		
 	}
 

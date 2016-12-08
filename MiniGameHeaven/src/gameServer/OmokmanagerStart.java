@@ -18,7 +18,7 @@ import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import JDBC.MySql;
+import DataBase.MySQL;
 import gameServer.OmokPan;
 
 @SuppressWarnings("serial")
@@ -124,7 +124,7 @@ public class OmokmanagerStart extends Frame implements ActionListener, Setmessag
 
 		}else if(ae.getSource() == gameDataButton){//대전기록 보기 버튼이면
 			
-			MySql CDB = new MySql();//JDBC 클래스 생성
+			MySQL CDB = new MySQL();//JDBC 클래스 생성
 			gameRecord = CDB.printResult();//JDBC클래스 내부의 메서드를 실행하고 return값 저장하기 위한 vector
 			Enumeration e = gameRecord.elements();//Enumeration객체를 이용해 vector의 elements를 모두 저장
 			
@@ -168,7 +168,7 @@ public class OmokmanagerStart extends Frame implements ActionListener, Setmessag
 
 	public static void main(String[] args) {
 		// 관리자 gui 생성
-		OmokmanagerStart OC = new OmokmanagerStart("superblr");
+		OmokmanagerStart OC = new OmokmanagerStart("OMOKserver");
 		OC.setSize(770, 550);
 		OC.setVisible(true);
 		// 오목서버 객체 생성

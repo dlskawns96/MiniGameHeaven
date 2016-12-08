@@ -6,8 +6,8 @@ import java.awt.TextArea;
 import java.io.*;
 import java.util.*;
 
-import JDBC.tempDBinpormation;
-import JDBC.MySql;
+import DataBase.tempDBinformation;
+import DataBase.MySQL;
 
 //import Clinet.OmokClient;
 
@@ -22,12 +22,15 @@ public class gameServer_OMOK {
 	
 	/*날짜계산 포멧*/
 	private SimpleDateFormat fm = new SimpleDateFormat("yyyy년 MM월 dd일 HH시MM분 ss초");//날짜형식 포맷 객체 생성
-	private tempDBinpormation TDI = new tempDBinpormation();//게임 결과 데이터를 저장하기 위한 객체
+	private tempDBinformation TDI = new tempDBinformation();//게임 결과 데이터를 저장하기 위한 객체
 	private long startTime,endTime;//시작시간, 끝시간
 	
 	/*JDBC저장을 위한 포멧*/
-	private MySql ms = new MySql();//JDBC connect 및 query전송을 위한 객체
+	private MySQL ms = new MySQL();//JDBC connect 및 query전송을 위한 객체
 	private Hashtable insertDate = new Hashtable(); //게임 결과값을 저장하기 위한 collection
+	private Vector userList=new Vector();//user 수를 측정하기 위한 벡터
+	private Vector playRoom=new Vector();
+	//public static int roomNum=1;
 
 	
 	private OmokPan OP = new OmokPan();
@@ -73,7 +76,8 @@ public class gameServer_OMOK {
 	// 클라이언트와 통신하는 스레드 inner클래스
 	class Omok_Thread extends Thread {
 		
-		private int Rnum = -1;
+		//private int Rnum = -1;
+		private int Rnum=-1;
 		// 사용자의 이름을 저장하는 변수
 		private String ID = null; // 사용자 이름
 		// 각 사용자의 소켓을 저장하는 변수
@@ -92,6 +96,7 @@ public class gameServer_OMOK {
 		}
 
 		// 소켓 getter
+	
 		Socket getSocket() {
 			return socket;
 		}
@@ -127,7 +132,12 @@ public class gameServer_OMOK {
 
 					// msg가 "room_msg"으로 시작되면 방 번호를 정한다.
 					else if (msg.startsWith("room_msg")) {
+						if(msg.substring(8).startsWith("_fromWatcher"))//watcher 측에서 온 입장메
+						{
+							int roomNum=Integer.parseInt(msg.substring(20));
+						}
 						int roomNum = Integer.parseInt(msg.substring(8));
+						
 						if (!OM.isFull(roomNum)) { // 방이 찬 상태가 아니면
 
 							// 현재 방의 다른 사용에게 사용자의 퇴장을 알린다.
@@ -194,11 +204,11 @@ public class gameServer_OMOK {
 					else if (msg.startsWith("[START]")) {
 						ready_state = true; // 게임을 시작할 준비가 되었다.
 
-						// 다른 사용자도 게임을 시작한 준비가 되었으면
+						// Rnum방의 다른 사용자도 게임을 시작한 준비가 되었으면 게임시작 설정해줌
 						if (OM.isReady(Rnum)) {
 							TDI.setStartDate(fm.format(new Date()));//사용자들의 게임 준비가 완료되면 시작 시간을 set
 							
-							/*시간차를 계산하기 위한 currentTiem*/
+							/*시간차를 계산하기 위한 currentTime*/
 							try {
 								startTime = System.currentTimeMillis();//현재 시간을 변수에 저장.
 							} catch (Exception e) {
@@ -215,7 +225,8 @@ public class gameServer_OMOK {
 							} else {
 								writer.println("[COLOR]WHITE");
 								OM.sendToOthers(this, "[COLOR]BLACK");
-							}						
+							}			
+							
 						}
 					}
 
@@ -254,7 +265,10 @@ public class gameServer_OMOK {
 				
 						 
 					}
-
+					else if(msg.startsWith("[RESTARTALL]")){
+						OM.sendToOthers(this, "[RESTART]");
+					}
+					
 					// 사용자가 이겼다는 메시지를 보내면
 					else if (msg.startsWith("[WIN]")) {
 						
@@ -303,6 +317,10 @@ public class gameServer_OMOK {
 					handler.CHAT(ID + "님 종료");
 					System.out.println("현재 " + OM.size() + "명 접속 중 입니다.");
 					handler.CHAT("현재 " + OM.size() + "명 접속 중 입니다.");
+					/*for(int i=0;i<OM.size();i++)
+					{
+						System.out.print(" [사용자"+i+"]"+OM.elementAt(i));
+					}*/
 					// 사용자가 접속을 끊었음을 같은 방에 알린다.
 					OM.sendToRoom(Rnum, "[DISCONNECT]" + ID);
 				} catch (Exception e) {

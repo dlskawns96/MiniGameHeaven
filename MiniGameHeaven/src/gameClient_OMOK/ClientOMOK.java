@@ -5,8 +5,8 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-import JDBC.MySql;
-import JDBC.tempDBinpormation;
+import DataBase.MySQL;
+import DataBase.tempDBinformation;
 import gameClient_OMOK.loginOMOK.MyPanel;
 
 import java.awt.event.*;
@@ -33,17 +33,17 @@ public class ClientOMOK extends Frame implements Runnable, ActionListener {
 	private int roomBox = 1; // 방 번호 상자
 
 	// 방에 접속한 인원의 수를 보여주는 레이블
-	private Label pInfo = new Label("상대방");
+	private Label pInfo = new Label("사용자 목록");
 
 	private java.awt.List pList = new java.awt.List(); // 사용자 명단을 보여주는 리스트
-	private Button startButton = new Button("대국 시작"); // 대국 시작 버튼
+	private Button startButton = new Button("준비완료"); // 대국 시작 버튼
 	private Button stopButton = new Button("기권"); // 기권 버튼:누르면 바둑알클리어되고 게임지속됨
-	private Button exitButton = new Button("로그인"); // 대기실로 버튼
+	private Button exitButton = new Button("닉네임 사용"); // 대기실로 버튼
 
 	// 각종 정보를 보여주는 레이블: 접속자 정보를 보여줌-1번방 2명 이런 식으로
 	static private Label infoView = new Label("게임화면", 1);
 	
-	private OmokPan board = new OmokPan(); // 오목판 객체
+	private OMOKPan board = new OMOKPan(); // 오목판 객체
 	private BufferedReader reader; // 입력 스트림
 	public PrintWriter writer; // 출력 스트림
 	private Socket CS; // 소켓
@@ -57,60 +57,12 @@ public class ClientOMOK extends Frame implements Runnable, ActionListener {
  ClientOMOK() { // 생성자
 		super();//?clientOMOK의 super가 누구지?JFrame??
 		setLayout(null); // 레이아웃을 사용하지 않는다. 사용자 지정
-
-
-	        
-		// 각종 컴포넌트를 생성하고 배치한다.
-		msgView.setEditable(false);//채팅창 못치게
 		
 		add(infoView);
 		add(board);
-		//		로그인
-		Panel p = new Panel();
 		
-
-		p.setBackground(Color.lightGray);
-		p.setLayout(new GridLayout(3, 3));
-		p.add(new Label("아 이 디", Label.CENTER));	
-		p.add(nameBox);
 		board.setLocation(10,70);
-		p.add(exitButton);
-		p.setBounds(500,60,250,70);
-
 		
-	
-	
-//		접속자
-		Panel p2 = new Panel();
-		p2.setBackground(Color.lightGray);
-		p2.setLayout(new BorderLayout());
-		Panel p2_1 = new Panel();
-		p2_1.add(startButton);
-		p2_1.add(stopButton);
-		p2.add(pInfo, "North");
-		p2.add(pList, "Center");
-		p2.add(p2_1, "South");
-		startButton.setEnabled(false);
-		stopButton.setEnabled(false);//p2_1에 추가한 버튼 2개를 사용불가하게
-		p2.setBounds(500, 140, 250, 90);
-//		채팅
-		Panel p3 = new Panel();
-		p3.setBackground(new Color(200, 255, 255));
-		p3.setLayout(new BorderLayout());
-		p3.add(msgView, "Center");
-		p3.add(sendBox, "South");
-		p3.setBounds(500, 240, 250, 280);
-
-		add(p);
-		add(p2);
-		add(p3);
-
-		// 이벤트 리스너를 등록한다.
-		sendBox.addActionListener(this);
-		exitButton.addActionListener(this);
-		startButton.addActionListener(this);
-		stopButton.addActionListener(this);
-
 		// 윈도우 닫기 처리: 어떤방식으로 닫히는 거지?
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
@@ -118,15 +70,11 @@ public class ClientOMOK extends Frame implements Runnable, ActionListener {
 			}
 		});
 		
-		setSize(770, 550);
-		setVisible(true);// 왜 visible하게 해주지?
-		connect();
-		
 	}//생성자 끝
 
  
 	// 컴포넌트들의 액션 이벤트 처리
-	public void actionPerformed(ActionEvent ae) {
+	/*public void actionPerformed(ActionEvent ae) {
 		if (ae.getSource() == sendBox) { // 메시지 입력 상자이면
 			String msg = sendBox.getText();
 			if (msg.length() == 0)
@@ -171,11 +119,9 @@ public class ClientOMOK extends Frame implements Runnable, ActionListener {
 			} catch (Exception e) {
 			}
 		}
-		
-		
-	}
+	}*/
 
- void goToWaitRoom() { // 로그인로 버튼을 누르면 호출된다.
+/* void goToWaitRoom() { // 로그인로 버튼을 누르면 호출된다.
 		if (user_ID == null) {
 			String name = nameBox.getText().trim();
 			if (name.length() <= 2 || name.length() > 10) {
@@ -193,7 +139,7 @@ public class ClientOMOK extends Frame implements Runnable, ActionListener {
 			infoView.setText("게임시작을 눌려주세요.");
 			exitButton.setEnabled(false);
 		}
-	}
+	}*/
 //	■■■■■■■■■■■■■■■■■■■■■■■■■■■클라이언트 GUI E■■■■■■■■■■■■■■■■■■■■■■■■■■■
 	
 //	■■■■■■■■■■■■■■■■■■■■■■■■■■■클라이언트 Thread S■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -279,8 +225,7 @@ public class ClientOMOK extends Frame implements Runnable, ActionListener {
 
 				// 약속된 메시지가 아니면 메시지 영역에 보여준다.
 				else
-					msgView.append(server_message + "\n");
-			}
+					msgView.append(server_message + "\n");			}
 		} catch (IOException ie) {
 			msgView.append(ie + "\n");
 		}
@@ -340,5 +285,12 @@ public class ClientOMOK extends Frame implements Runnable, ActionListener {
 		} catch (Exception e) {
 			msgView.append(e + "\n\n연결 실패..\n");
 		}
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
