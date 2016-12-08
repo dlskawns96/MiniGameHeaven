@@ -31,7 +31,11 @@ class OmokPan extends Canvas {
 	private Image buff; // 더블 버퍼링을 위한 버퍼
 	
 	private Toolkit myToolkit = Toolkit.getDefaultToolkit();
+<<<<<<< HEAD
 	private Image panImage = myToolkit.getImage("omokpan.png");
+=======
+	private Image panImage = myToolkit.getImage("OMOK_BGboard.jpg");
+>>>>>>> origin/master
 
 	OmokPan() {
 		this.omok_pan_size = 15;

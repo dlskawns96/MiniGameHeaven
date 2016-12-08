@@ -353,6 +353,7 @@ public int getRoom_player()
 					endGame("상대방 기권!");
 
 				else if (server_message.startsWith("[WIN]")) // 이겼으면
+<<<<<<< HEAD
 				{
 					JOptionPane.showMessageDialog(null, "I Won!!");
 					endGame("당신의 승리!");
@@ -362,6 +363,13 @@ public int getRoom_player()
 					JOptionPane.showMessageDialog(null, "I lost!!");
 					endGame("당신의 패배!");
 				}
+=======
+					endGame("당신의 승리!");
+
+				else if (server_message.startsWith("[LOSE]")) // 졌으면
+					endGame("당신의 패배!");
+
+>>>>>>> origin/master
 				// 약속된 메시지가 아니면 메시지 영역에 보여준다.
 				else
 					msgView.append(server_message + "\n");
